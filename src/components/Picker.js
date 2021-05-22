@@ -51,7 +51,7 @@ const windowHeight = Dimensions.get('window').height;
     pinmode:false,
     pincode:null,
     vaccineAvailablity:false,
-    avail:[]
+    avail:[],
   }
   }
   
@@ -109,7 +109,29 @@ try{
        avail:av,
       vaccineAvailablity:true
      })
+     
        }
+
+      if(this.state.states.length <= 0){
+        alert('Select State')
+      }else if(this.state.district.length <= 0){
+        alert('Select District')
+      }else if(this.state.avail && !this.state.states.length <= 0 && !this.state.district.length <= 0){
+        if(this.state.avail.length <= 0){
+          alert('No Vaccine Available Now , we will notify you soon if available .')
+          this.setState({
+           vaccineAvailablity:false
+          })
+        }
+        }
+
+        
+    
+       
+
+       
+       
+    
 
 
      
@@ -125,6 +147,55 @@ try{
     }catch(error){
       console.log(error)
     }
+
+    
+
+
+
+    if(this.state.pincode){
+      if(this.state.pincode.length === 6){
+
+        if(this.state.pinmode){
+          instance.get(`https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/findByPin?pincode=${this.state.pincode}&date=${date}-${month}-${year}`).then(e=> e.data).then(res =>{
+    
+          
+           let av = res.sessions.filter(es => es.available_capacity > 0)
+            if(av){
+          this.setState({
+            avail:av,
+           vaccineAvailablity:true
+          })
+           }
+
+            if(this.state.avail){
+              if(this.state.avail.length <= 0){
+                alert('No Vaccine Available Now , we will notify you soon if available .')
+                this.setState({
+                 vaccineAvailablity:false
+                })
+              }else{
+
+                
+
+              }
+              }
+    
+    
+          }).catch((err)=> alert('Enter correct pincode'))
+        
+        }else{
+          console.log('not open')
+        }
+
+      }else{
+        alert('Enter all 6 dight pincode')
+      }
+    }else if(this.state.pincode.length === 0){
+      alert('Enter pincode carefully')
+    }
+
+
+
   }
 
 
@@ -172,13 +243,13 @@ changedatadistrict = value => {
          <ImageBackground resizeMode="cover" source={require('../bgcovid.jpg')} style={{width:'100%' , height:'100%'}} imageStyle={{opacity:0.3,borderRadius:20}}>
 
 
-{this.state.vaccineAvailablity ? <View>
+{this.state.vaccineAvailablity ? <View style={{backgroundColor:'#E7EEE9'}}>
 
 <View style={{padding:10}}>
   <View style={{marginTop:"8%",width:'96%',height:80,backgroundColor:"#fff",margin:"2%",borderRadius:20,justifyContent:'center',alignItems:'center'}}><Text  style={{fontSize:20,fontWeight:"bold",color:'#3B5922'}}>Vaccine Available Now</Text></View>
   <View style={{marginBottom:"95%"}}>
   <FlatList  data={this.state.avail} showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false} keyExtractor={item =>item.pincode} renderItem={({item,index})=>{
-    console.log(item)
+    
    return(
 <View key={index}>
     <View style={{width:'96%',height:190,backgroundColor:'white',margin:'2%',borderRadius:20,flexDirection:'row',position:'relative'}}>
@@ -199,14 +270,14 @@ changedatadistrict = value => {
       </View>
     </View>
     <View style={{width:'67%',height:'100%',padding:10,flexWrap:'wrap',position:'relative'}}>
-      <View style={{flexDirection:'row',justifyContent:'space-around'}}><Text style={{fontSize:10,marginLeft:-45}}>Center</Text><Text style={{fontSize:10 ,alignItems:'flex-end'}}>31-05-2021</Text></View>
+      <View style={{flexDirection:'row',justifyContent:'space-around'}}><Text style={{fontSize:10,marginLeft:-45}}>Center : {item.center_id}</Text><Text style={{fontSize:10 ,alignItems:'flex-end'}}>{item.date}</Text></View>
     <View style={{flexDirection:'row',paddingTop:5,width:'87%',position:'relative'}}>
     <FontAwesome5 name='hospital' style={{padding:10,paddingLeft:1}} size={17} color='black' />
-      <Text style={{fontSize:18,fontWeight:'bold',flexWrap:'wrap' ,width:'87%'}}>{item.name}</Text>
+      <Text numberOfLines={2} style={{fontSize:18,fontWeight:'bold',flexWrap:'wrap' ,width:'87%'}}>{item.name}</Text>
     </View>
     <View style={{flexDirection:'row'}}>
     <MaterialIcons name='add-location-alt' style={{padding:7,paddingLeft:1}} size={17} color='black' />
-      <Text style={{fontSize:13,fontWeight:'normal',flexWrap:'wrap' ,width:'68%',paddingTop:7,flexWrap:'wrap'}}>{item.address}</Text>
+      <Text numberOfLines={2} style={{fontSize:13,fontWeight:'normal',flexWrap:'wrap' ,width:'68%',paddingTop:7,flexWrap:'wrap'}}>{item.address + `   ${item.pincode}`}</Text>
     </View>
     <View style={{flexDirection:'row'}}>
     <FontAwesome name='rupee' style={{padding:10,paddingBottom:6,paddingLeft:6}} size={15} color='black' />
@@ -258,7 +329,7 @@ changedatadistrict = value => {
    
            <View style={{flexDirection:'row'}}>
    
-           <TextInput  ref={"pin1ref"} autoFocus={true} onChangeText={(value) => {}}  style={{letterSpacing:10,borderWidth:2,margin:5,borderColor:'black',borderRadius:10, backgroundColor:'white',padding:3,width:'98%',height:70,textAlign:'center',fontSize:30,fontWeight:'bold'}} keyboardType='number-pad' maxLength={6}></TextInput>
+           <TextInput  ref={"pin1ref"} autoFocus={true} onChangeText={(value) => {this.setState({pincode:value})}} value={this.state.pincode} style={{letterSpacing:10,borderWidth:2,margin:5,borderColor:'black',borderRadius:10, backgroundColor:'white',padding:3,width:'98%',height:70,textAlign:'center',fontSize:30,fontWeight:'bold'}} keyboardType='number-pad' maxLength={6}></TextInput>
        
            </View>
            <TouchableOpacity onPress={()=> this.setState({pinmode:false})} style={{paddingTop:'7%'}}><Text style={{textAlign:'center',fontSize:13,fontWeight:'bold',color:'#FF8585'}}>I Knew State & District !</Text></TouchableOpacity>
