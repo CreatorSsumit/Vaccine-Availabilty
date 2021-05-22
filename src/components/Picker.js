@@ -50,7 +50,7 @@ const windowHeight = Dimensions.get('window').height;
     selectdistrict:"Select District",
     pinmode:false,
     pincode:null,
-    vaccineAvailablity:true,
+    vaccineAvailablity:false,
     avail:[]
   }
   }
@@ -106,7 +106,8 @@ try{
       var av = res.sessions.filter(es => es.available_capacity > 0)
        if(av){
      this.setState({
-       avail:av
+       avail:av,
+      vaccineAvailablity:true
      })
        }
 
@@ -156,13 +157,8 @@ changedatadistrict = value => {
     selectdistrict:value
   })
 
-  
- 
   }
   
-
-
-
   render() {
     
     
@@ -180,49 +176,56 @@ changedatadistrict = value => {
 
 <View style={{padding:10}}>
   <View style={{marginTop:"8%",width:'96%',height:80,backgroundColor:"#fff",margin:"2%",borderRadius:20,justifyContent:'center',alignItems:'center'}}><Text  style={{fontSize:20,fontWeight:"bold",color:'#3B5922'}}>Vaccine Available Now</Text></View>
-  
-  <View style={{width:'96%',height:190,backgroundColor:'white',margin:'2%',borderRadius:20,flexDirection:'row',position:'relative'}}>
+  <View style={{marginBottom:"95%"}}>
+  <FlatList  data={this.state.avail} showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false} keyExtractor={item =>item.pincode} renderItem={({item,index})=>{
+    console.log(item)
+   return(
+<View key={index}>
+    <View style={{width:'96%',height:190,backgroundColor:'white',margin:'2%',borderRadius:20,flexDirection:'row',position:'relative'}}>
 
-  <View style={{width:'33%',height:'100%',borderRadius:20,position:'relative',}}>
-    <View style={{width:"100%",height:"50%",flexDirection:'row',justifyContent:'center',alignItems:'center',paddingTop:7}}>
-      <View style={{width:70,height:70,backgroundColor:'#E1ECD5',borderRadius:19,justifyContent:'center',alignItems:'center'}}>
-        <Text style={{fontSize:30,fontWeight:'bold',color:'#3B5922'}}>26</Text>
+    <View style={{width:'33%',height:'100%',borderRadius:20,position:'relative',}}>
+      <View style={{width:"100%",height:"50%",flexDirection:'row',justifyContent:'center',alignItems:'center',paddingTop:7}}>
+        <View style={{width:70,height:70,backgroundColor:'#E1ECD5',borderRadius:19,justifyContent:'center',alignItems:'center'}}>
+          <Text style={{fontSize:30,fontWeight:'bold',color:'#3B5922'}}>{item.available_capacity}</Text>
+        </View>
+        
       </View>
-      
+      <View style={{width:"100%",height:"50%",position:'relative'}}>
+      {/* <Text style={{fontSize:10,textAlign:'center',fontWeight:'bold'}}>{`Dose1 0 |  Dose2 0`}</Text> */}
+      <View style={{justifyContent:'center',alignItems:'center',marginTop:10}}>
+      <View style={{width:70,height:70,backgroundColor:'#132A13',borderRadius:19,justifyContent:'center',alignItems:'center'}}>
+          <Text style={{fontSize:22,fontWeight:'bold',color:'white'}}>{item.min_age_limit}+</Text>
+        </View></View>
+      </View>
     </View>
-    <View style={{width:"100%",height:"50%",position:'relative'}}>
-    {/* <Text style={{fontSize:10,textAlign:'center',fontWeight:'bold'}}>{`Dose1 0 |  Dose2 0`}</Text> */}
-    <View style={{justifyContent:'center',alignItems:'center',marginTop:10}}>
-    <View style={{width:70,height:70,backgroundColor:'#132A13',borderRadius:19,justifyContent:'center',alignItems:'center'}}>
-        <Text style={{fontSize:22,fontWeight:'bold',color:'white'}}>18+</Text>
-      </View></View>
+    <View style={{width:'67%',height:'100%',padding:10,flexWrap:'wrap',position:'relative'}}>
+      <View style={{flexDirection:'row',justifyContent:'space-around'}}><Text style={{fontSize:10,marginLeft:-45}}>Center</Text><Text style={{fontSize:10 ,alignItems:'flex-end'}}>31-05-2021</Text></View>
+    <View style={{flexDirection:'row',paddingTop:5,width:'87%',position:'relative'}}>
+    <FontAwesome5 name='hospital' style={{padding:10,paddingLeft:1}} size={17} color='black' />
+      <Text style={{fontSize:18,fontWeight:'bold',flexWrap:'wrap' ,width:'87%'}}>{item.name}</Text>
     </View>
-  </View>
-  <View style={{width:'67%',height:'100%',padding:10,flexWrap:'wrap',position:'relative'}}>
-    <View style={{flexDirection:'row',justifyContent:'space-around'}}><Text style={{fontSize:10,marginLeft:-45}}>Center</Text><Text style={{fontSize:10 ,alignItems:'flex-end'}}>31-05-2021</Text></View>
-  <View style={{flexDirection:'row',paddingTop:5,width:'87%',position:'relative'}}>
-  <FontAwesome5 name='hospital' style={{padding:10,paddingLeft:1}} size={17} color='black' />
-    <Text style={{fontSize:18,fontWeight:'bold',flexWrap:'wrap' ,width:'87%'}}>Gov hr sec school mandideep</Text>
-  </View>
-  <View style={{flexDirection:'row'}}>
-  <MaterialIcons name='add-location-alt' style={{padding:7,paddingLeft:1}} size={17} color='black' />
-    <Text style={{fontSize:13,fontWeight:'normal',flexWrap:'wrap' ,width:'68%',paddingTop:7,flexWrap:'wrap'}}>Gov hr sec school mandideep bhopal</Text>
-  </View>
-  <View style={{flexDirection:'row'}}>
-  <FontAwesome name='rupee' style={{padding:10,paddingBottom:6,paddingLeft:6}} size={15} color='black' />
-    <Text style={{fontSize:13,fontWeight:'bold',flexWrap:'wrap' ,width:'87%',paddingTop:7}}>Free</Text>
-  </View>
-  <View style={{flexDirection:'row',position:'relative'}}>
-  <Fontisto name='injection-syringe' style={{paddingLeft:4,paddingTop:8}} size={15} color='black' />
-   
-   <View style={{width:"60%",height:30,marginLeft:10,backgroundColor:'#ABD289',borderRadius:10,alignItems:'center',justifyContent:'center',position:'relative'}}><Text style={{fontSize:13,fontWeight:'bold',flexWrap:'wrap', textAlign:'center',width:'87%',color:"#31572C"}}>Covaxin</Text></View>
-  </View>
-  </View>
-
-    {/* <AntDesign name='checkcircleo' />
-  <FontAwesome5 name='hospital' size={30} color='black' /> */}
-
-  </View>
+    <View style={{flexDirection:'row'}}>
+    <MaterialIcons name='add-location-alt' style={{padding:7,paddingLeft:1}} size={17} color='black' />
+      <Text style={{fontSize:13,fontWeight:'normal',flexWrap:'wrap' ,width:'68%',paddingTop:7,flexWrap:'wrap'}}>{item.address}</Text>
+    </View>
+    <View style={{flexDirection:'row'}}>
+    <FontAwesome name='rupee' style={{padding:10,paddingBottom:6,paddingLeft:6}} size={15} color='black' />
+      <Text style={{fontSize:13,fontWeight:'bold',flexWrap:'wrap' ,width:'87%',paddingTop:7}}>{item.fee_type ==='Free'||'free' ? "Free" : item.fee}</Text>
+    </View>
+    <View style={{flexDirection:'row',position:'relative'}}>
+    <Fontisto name='injection-syringe' style={{paddingLeft:4,paddingTop:8}} size={15} color='black' />
+     
+     <View style={{width:"60%",height:30,marginLeft:10,backgroundColor:'#ABD289',borderRadius:10,alignItems:'center',justifyContent:'center',position:'relative'}}><Text style={{fontSize:13,fontWeight:'bold',flexWrap:'wrap', textAlign:'center',width:'87%',color:"#31572C"}}>{item.vaccine}</Text></View>
+    </View>
+    </View>
+  
+      {/* <AntDesign name='checkcircleo' />
+    <FontAwesome5 name='hospital' size={30} color='black' /> */}
+  
+    </View>
+    </View>
+   )
+  }} /></View>
   
 </View>
 
