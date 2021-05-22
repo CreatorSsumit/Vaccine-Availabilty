@@ -1,0 +1,69 @@
+ <View style={{width:"96%",height:windowHeight/1.4,position:'relative',backgroundColor:'#E7EEE9',margin:'2%',justifyContent:'flex-end',borderRadius:50}}>
+           
+
+        { this.state.pinmode ? <View><Text style={{fontSize:40,fontWeight:'bold',textAlign:'center'}}>{`Enter Your\n6 Digit Pincode`}</Text><Text style={{textAlign:'center'}}>..........................................</Text><View style={{margin:"7%",marginBottom:'2%', marginTop:'27%'}}><Text style={{fontSize:15,marginBottom:10,fontWeight:'bold',textAlign:'center'}}>Enter Correct Pincode to Fetch Availabilty</Text>
+
+
+        <View style={{flexDirection:'row'}}>
+
+        <TextInput  ref={"pin1ref"} autoFocus={true} onChangeText={(value) => {}}  style={{letterSpacing:10,borderWidth:2,margin:5,borderColor:'black',borderRadius:10, backgroundColor:'white',padding:3,width:'98%',height:70,textAlign:'center',fontSize:30,fontWeight:'bold'}} keyboardType='number-pad' maxLength={6}></TextInput>
+    
+        </View>
+        <TouchableOpacity onPress={()=> this.setState({pinmode:false})} style={{paddingTop:'6%'}}><Text style={{textAlign:'center',fontSize:13,fontWeight:'bold'}}>I Knew State & District !</Text></TouchableOpacity>
+         
+        
+        </View></View> : <View>
+         <View style={{margin:"10%", marginTop:'27%'}}>
+           <Text style={{fontSize:15,marginBottom:10,fontWeight:'bold'}}>Select State</Text>
+           <TouchableOpacity style={{backgroundColor:"white",borderRadius:10,borderWidth:2 ,borderColor:'black'}}>
+            <Picker style={{width:'98%',height:70}}
+       selectedValue={this.state.selectstate}
+      
+       onValueChange={value => this.changedata(value)}>
+
+         
+       <Picker.Item enabled={false} col label="Select State" value="Select" />
+      {this.statevalue()}
+     
+     </Picker>
+       
+            
+           </TouchableOpacity>
+
+         
+           </View>
+
+
+           <View style={{margin:"10%", marginTop:'1%'}}>
+           <Text style={{fontSize:15,marginBottom:10,fontWeight:'bold'}}>Select District</Text>
+           <TouchableOpacity style={{backgroundColor:"white",borderRadius:10,borderWidth:2 ,borderColor:'black'}}>
+            <Picker style={{width:'98%',height:70}}
+       selectedValue={this.state.selectdistrict}
+       itemStyle={{backgroundColor:"grey" ,color:'white',borderWidth:4,borderColor:'red'}}
+       onValueChange={(itemValue) =>
+         this.setState({selectdistrict:itemValue})
+       }>
+       <Picker.Item  enabled={false} label="Select District" value="Select" />
+       {this.state.district ? this.state.district.map((data) => {
+         return   <Picker.Item key={data.district_id} label={data.district_name} value={data.district_id} />
+       }) :  <Picker.Item enabled={false} label="Select District" value="disable" /> }
+      
+     </Picker>
+       
+            
+           </TouchableOpacity>
+           </View>
+
+           <TouchableOpacity onPress={()=> this.setState({pinmode:true})} style={{padding:7}}><Text style={{textAlign:'center',fontSize:13,fontWeight:'bold'}}>I Have A Pincode !</Text></TouchableOpacity>
+           </View>
+ }
+
+
+
+           <TouchableOpacity style={{height:"12%",backgroundColor:"black",justifyContent:'center',alignItems:'center',margin:"10%", marginTop:'10%',borderRadius:10,borderWidth:2 ,borderColor:'black'}}>
+          
+       <Text style={{color:'white',fontSize:20}}>Notifying me</Text>
+            
+           </TouchableOpacity>
+            </View>
+       
