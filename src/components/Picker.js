@@ -113,7 +113,7 @@ try{
   if(this.state.states.length <= 0 ){
     alert('Select State')
   }else if(this.state.district.length <= 0 && !this.state.pinmode){
-    alert('Select District')
+    alert('Select State & District to Continue')
   }
 
   if(this.state.selectdistrict){
@@ -139,7 +139,7 @@ await instance.get(`https://cdn-api.co-vin.in/api/v2/appointment/sessions/public
       }
 
       if(this.state.avail = [] && this.state.avail.length < 1){
-        alert('No Vaccine Available Now ,we will notify you when it available')
+        alert('No Vaccine Available Now ,we will notify you soon when it available')
         this.setState({
           vaccineAvailablity:false
         })
@@ -155,12 +155,6 @@ await instance.get(`https://cdn-api.co-vin.in/api/v2/appointment/sessions/public
   })
   }}catch(error){console.log()}
 
-  // if(this.state.avail.length === null ||undefined || '' || 0 || '0'){
-  //   alert('No Vaccine Available we will notify you when available')
-  //   this.setState({
-  //     vaccineAvailablity:false
-  //   })
-  // }
   
   if(this.state.pincode.length < 6 && this.state.pincode > 0 && this.state.pinmode){
     alert('Enter Correct 6 Digit Pincode')
@@ -194,7 +188,7 @@ await instance.get(`https://cdn-api.co-vin.in/api/v2/appointment/sessions/public
 
 
       if(this.state.avail = [] && this.state.avail.length < 1){
-        alert('No Vaccine Available Now ,we will notify you when it available')
+        alert('No Vaccine Available Now ,we will notify you soon when it available')
         this.setState({
           vaccineAvailablity:false
         })
