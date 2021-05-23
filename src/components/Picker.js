@@ -51,7 +51,7 @@ const windowHeight = Dimensions.get('window').height;
     pinmode:false,
     pincode:'',
     vaccineAvailablity:false,
-    avail:[],
+    avail:null,
   }
   }
   
@@ -81,7 +81,7 @@ date = date.replace(/\//g, "-");
 }
 
 
- fetchdata(){
+async fetchdata(){
 
 
   var d = new Date();
@@ -107,14 +107,22 @@ date = date.replace(/\//g, "-");
  
 try{
   var joinavail = [];
+  var pinjoin = [];
+
+
+  if(this.state.states.length <= 0 ){
+    alert('Select State')
+  }else if(this.state.district.length <= 0 && !this.state.pinmode){
+    alert('Select District')
+  }
 
   if(this.state.selectdistrict){
-  instance.get(`https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/findByDistrict?district_id=${this.state.selectdistrict}&date=${date}-${month}-${year}`).then(e=> e.data).then(res =>{
+await instance.get(`https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/findByDistrict?district_id=${this.state.selectdistrict}&date=${date}-${month}-${year}`).then(e=> e.data).then(res =>{
     
       var av = res.sessions.filter(es => es.available_capacity > 0)
 
 
-      instance.get(`https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/findByDistrict?district_id=${this.state.selectdistrict}&date=${tommdate}-${month}-${year}`).then(en=> en.data).then(res1 =>{
+   instance.get(`https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/findByDistrict?district_id=${this.state.selectdistrict}&date=${tommdate}-${month}-${year}`).then(en=> en.data).then(res1 =>{
 
       var av1 =  res1.sessions.filter(es => es.available_capacity > 0)
 
@@ -129,103 +137,81 @@ try{
          })
 
       }
-      }).catch(e=> console.log(e))
 
-      // if(av){
-      //   this.setState({
-    
-      //    vaccineAvailablity:true
-      //   })
-           
-      //     }
-  
-
-
-
-   
-       if(this.state.states.length <= 0){
-        alert('Select State')
-      }else if(this.state.district.length <= 0){
-        alert('Select District')
-      }else if(this.state.avail && !this.state.states.length <= 0 && !this.state.district.length <= 0){
-        if(this.state.avail.length < 0){
-          alert('No Vaccine Available Now , we will notify you soon if available .')
-          this.setState({
-           vaccineAvailablity:false
-          })
-        }
-        }
-
-     
-       
-   //  setTimeout(() => this.fetchdata(),1000);
- 
-     
-       
-       })
-  }
-
-
-  
-   
-  
-    }catch(error){
-     
-    }
-
-    
-
-
-
-    if(this.state.pincode.length > 0){
-      if(this.state.pincode.length === 5){
-
-        if(this.state.pinmode){
-   instance.get(`https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/findByPin?pincode=${this.state.pincode}&date=${date}-${month}-${year}`).then(e=> e.data).then(res =>{
-    
-          
-           let av = res.sessions.filter(es => es.available_capacity > 0)
-
-            if(av){
-          this.setState({
-            avail:av,
-           vaccineAvailablity:true
-          })
-           }
-
-
-
-
-            if(this.state.avail){
-              if(this.state.avail.length <= 0){
-                alert('No Vaccine Available Now , we will notify you soon if available .')
-                this.setState({
-                 vaccineAvailablity:false
-                })
-              }else{
-
-                
-
-              }
-              }
-    
-    
-          }).catch((err)=> alert('Enter correct pincode'))
-        
-        }else{
-          console.log('not open')
-        }
-
-      }else{
-        alert('Enter all 6 dight pincode')
+      if(this.state.avail = [] && this.state.avail.length < 1){
+        alert('No Vaccine Available Now ,we will notify you when it available')
+        this.setState({
+          vaccineAvailablity:false
+        })
       }
-    }else if(this.state.pinmode){
-      if(this.state.pincode.length < 1){
-        alert('Enter pincode carefully')
-    }
 
 
+
+
+      
+      }).catch(e=> console.log("cvhh"))
+  
+   //  setTimeout(() => this.fetchdata(),1000);
+  })
+  }}catch(error){console.log()}
+
+  // if(this.state.avail.length === null ||undefined || '' || 0 || '0'){
+  //   alert('No Vaccine Available we will notify you when available')
+  //   this.setState({
+  //     vaccineAvailablity:false
+  //   })
+  // }
+  
+  if(this.state.pincode.length < 6 && this.state.pincode > 0 && this.state.pinmode){
+    alert('Enter Correct 6 Digit Pincode')
   }
+
+  if(this.state.pinmode){
+    if(!this.state.pincode){
+      alert("Enter Correct Pincode")
+    }
+  }
+  
+
+
+  instance.get(`https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/findByPin?pincode=${this.state.pincode}&date=${date}-${month}-${year}`).then(e=> e.data).then(resw =>{
+   
+         
+  var avpin = resw.sessions.filter(es => es.available_capacity > 0)
+   
+  instance.get(`https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/findByPin?pincode=${this.state.pincode}&date=${tommdate}-${month}-${year}`).then(e=> e.data).then(resss =>{
+
+
+  var avpin2 = resss.sessions.filter(es => es.available_capacity > 0)
+
+   pinjoin = [...avpin , ...avpin2]
+
+    if(avpin && avpin2){
+      this.setState({
+        avail:pinjoin,
+        vaccineAvailablity:true
+      }) }
+
+
+      if(this.state.avail = [] && this.state.avail.length < 1){
+        alert('No Vaccine Available Now ,we will notify you when it available')
+        this.setState({
+          vaccineAvailablity:false
+        })
+      }
+      
+      
+    })
+
+   }).catch((err)=> console.log(err))
+ 
+   
+
+ 
+
+
+
+   
   }
 
 
