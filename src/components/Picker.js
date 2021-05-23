@@ -1,5 +1,5 @@
 import React, {Fragment,Component} from 'react';
-import {Text, StyleSheet, View, TextInput,Dimensions, StatusBar, TouchableOpacity,FlatList,ImageBackground} from 'react-native';
+import {Text, StyleSheet, View, TextInput,Dimensions, StatusBar, TouchableOpacity,FlatList,ImageBackground,RefreshControl} from 'react-native';
 import {Picker} from '@react-native-picker/picker';
 import {connect} from "react-redux"
 import axios from "axios"
@@ -9,7 +9,8 @@ import Entypo from "react-native-vector-icons/Entypo"
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5"
 import FontAwesome from "react-native-vector-icons/FontAwesome"
 import MaterialIcons from "react-native-vector-icons/MaterialIcons"
-import Fontisto from "react-native-vector-icons/Fontisto"
+import Fontisto from "react-native-vector-icons/Fontisto";
+import AsyncStorage from "@react-native-async-storage/async-storage"
 
 var instance = axios.create({
   headers:{
@@ -21,11 +22,6 @@ var instance = axios.create({
 
   }
 })
-
-
-
-
-
 
 
 const stateapi = 'https://cdn-api.co-vin.in/api/v2/admin/location/states'
@@ -51,12 +47,53 @@ const windowHeight = Dimensions.get('window').height;
     pinmode:false,
     pincode:'',
     vaccineAvailablity:false,
-    avail:null,
+    avail:[],
   }
   }
+
+checkuser =() =>{
+
+ // AsyncStorage.clear()
+
+    AsyncStorage.getItem('data').then(res => {
+
+   if(res){
+    if(res.length){
+
+     try{
+
+      if(res.length > 0){
+
+        if(res !== undefined && res.length > 0)
+          var data =  JSON.parse(res)
+
+         this.setState({
+           avail:data,
+           vaccineAvailablity:true
+         })
+
+         console.log(data)
+  
+       
+      }else{
+        console.log('undefine')
+      }
+    
+    }catch(error){console.log(error)}
+    
+   }
+     
+  }})}
+
+ 
   
 
 componentDidMount(){
+
+// AsyncStorage.clear()
+
+
+
 var d = new Date();
 var options = {
 year: "numeric",
@@ -77,7 +114,14 @@ date = date.replace(/\//g, "-");
 })
 
 
+this.checkuser()
 
+
+}
+
+
+componentDidUpdate(){
+  this.checkuser()
 }
 
 
@@ -136,6 +180,13 @@ await instance.get(`https://cdn-api.co-vin.in/api/v2/appointment/sessions/public
           vaccineAvailablity:true
          })
 
+         AsyncStorage.setItem('data',JSON.stringify(this.state.avail)).then((value)=> {
+
+        }).catch(error => console.log(error))
+      
+      setTimeout(() => this.fetchdata(),2000);
+
+
       }
 
       if(this.state.avail = [] && this.state.avail.length < 1){
@@ -151,7 +202,7 @@ await instance.get(`https://cdn-api.co-vin.in/api/v2/appointment/sessions/public
       
       }).catch(e=> console.log("cvhh"))
   
-   //  setTimeout(() => this.fetchdata(),1000);
+   //  
   })
   }}catch(error){console.log()}
 
@@ -184,7 +235,16 @@ await instance.get(`https://cdn-api.co-vin.in/api/v2/appointment/sessions/public
       this.setState({
         avail:pinjoin,
         vaccineAvailablity:true
-      }) }
+      }) 
+
+      AsyncStorage.setItem('data',JSON.stringify(this.state.avail)).then((value)=> {
+ 
+      }).catch(error => console.log(error))
+    
+   
+      setTimeout(() => this.fetchdata(),2000);
+
+    }
 
 
       if(this.state.avail = [] && this.state.avail.length < 1){
@@ -316,20 +376,11 @@ changedatadistrict = value => {
 <View style={{padding:10}}>
   <View style={{marginTop:"8%",width:'96%',height:80,backgroundColor:"#fff",margin:"2%",borderRadius:20,justifyContent:'center',alignItems:'center'}}><Text  style={{fontSize:20,fontWeight:"bold",color:'#3B5922'}}>Vaccine Available Now</Text></View>
   <View style={{marginBottom:"95%"}}>
-  <FlatList removeClippedSubviews={true} data={this.state.avail} showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false} keyExtractor={item => Math.floor(Math.random()*100000000000000)} renderItem={({item,index})=> this.renderitemdata(item)
+  <FlatList removeClippedSubviews={true} data={this.state.avail} showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false} keyExtractor={(item,index) => index } renderItem={({item,index})=> this.renderitemdata(item)
    
  } /></View>
   
 </View>
-
-
-
-
-
-
-
-
-
 </View> : <Fragment>
   
 {this.state.pinmode ? 
