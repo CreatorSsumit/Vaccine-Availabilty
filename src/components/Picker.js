@@ -38,6 +38,7 @@ const windowHeight = Dimensions.get('window').height;
   constructor(props){
   super(props);
   this.state={
+    alert:1,
     states:[],
     statekey:null,
     district:[],
@@ -47,13 +48,13 @@ const windowHeight = Dimensions.get('window').height;
     pinmode:false,
     pincode:'',
     vaccineAvailablity:false,
-    avail:[],
+    avail:[]
   }
   }
 
 checkuser =() =>{
 
- // AsyncStorage.clear()
+  AsyncStorage.clear()
 
     AsyncStorage.getItem('data').then(res => {
 
@@ -72,7 +73,7 @@ checkuser =() =>{
            vaccineAvailablity:true
          })
 
-         console.log(data)
+       
   
        
       }else{
@@ -90,7 +91,7 @@ checkuser =() =>{
 
 componentDidMount(){
 
-// AsyncStorage.clear()
+ AsyncStorage.clear()
 
 
 
@@ -121,7 +122,7 @@ this.checkuser()
 
 
 componentDidUpdate(){
-  this.checkuser()
+  
 }
 
 
@@ -184,17 +185,27 @@ await instance.get(`https://cdn-api.co-vin.in/api/v2/appointment/sessions/public
 
         }).catch(error => console.log(error))
       
-      setTimeout(() => this.fetchdata(),2000);
+     setTimeout(() => this.fetchdata(),2000);
+
+
 
 
       }
 
-      if(this.state.avail = [] && this.state.avail.length < 1){
-        alert('No Vaccine Available Now ,we will notify you soon when it available')
-        this.setState({
-          vaccineAvailablity:false
-        })
+
+      if(this.state.alert === 1){
+        this.setState({alert:this.state.alert + 1})
+
+        if(this.state.avail = [] && this.state.avail.length < 1 && this.state.district.length > 0){
+          alert('No Vaccine Available Now ,we will notify you soon when it available')
+          this.setState({
+            vaccineAvailablity:false
+          })
+        }
+
       }
+
+     
 
 
 
@@ -237,21 +248,31 @@ await instance.get(`https://cdn-api.co-vin.in/api/v2/appointment/sessions/public
         vaccineAvailablity:true
       }) 
 
+     
+
       AsyncStorage.setItem('data',JSON.stringify(this.state.avail)).then((value)=> {
  
       }).catch(error => console.log(error))
     
    
-      setTimeout(() => this.fetchdata(),2000);
+     setTimeout(() => this.fetchdata(),2000);
 
     }
 
 
-      if(this.state.avail = [] && this.state.avail.length < 1){
-        alert('No Vaccine Available Now ,we will notify you soon when it available')
-        this.setState({
-          vaccineAvailablity:false
-        })
+      
+
+      
+      if(this.state.alert === 1){
+        this.setState({alert:this.state.alert + 1})
+
+        if(this.state.avail = [] && this.state.avail.length < 1){
+          alert('No Vaccine Available Now ,we will notify you soon when it available')
+          this.setState({
+            vaccineAvailablity:false
+          })
+        }
+
       }
       
       
@@ -308,7 +329,7 @@ changedatadistrict = value => {
 
 
   renderitemdata = (item ,index) =>{  
-    return <View key={Math.floor(Math.random()*100000000000000000)}>
+    return <View key={index}>
     <View style={{width:'96%',height:190,backgroundColor:'white',margin:'2%',borderRadius:20,flexDirection:'row',position:'relative'}}>
  
     <View style={{width:'33%',height:'100%',borderRadius:20,position:'relative',}}>
@@ -374,9 +395,9 @@ changedatadistrict = value => {
 {this.state.vaccineAvailablity ? <View style={{backgroundColor:'#E7EEE9'}}>
 
 <View style={{padding:10}}>
-  <View style={{marginTop:"8%",width:'96%',height:80,backgroundColor:"#fff",margin:"2%",borderRadius:20,justifyContent:'center',alignItems:'center'}}><Text  style={{fontSize:20,fontWeight:"bold",color:'#3B5922'}}>Vaccine Available Now</Text></View>
+  <View style={{marginTop:"8.1%",width:'96%',height:80,backgroundColor:"#fff",margin:"2%",borderRadius:20,justifyContent:'center',alignItems:'center'}}><Text  style={{fontSize:20,fontWeight:"bold",color:'#3B5922'}}>Vaccine Available Now</Text><TouchableOpacity onPress={()=> { this.setState({vaccineAvailablity:false})}}><Text styel={{fontWeight:'bold'}}>Reset location ?</Text></TouchableOpacity></View>
   <View style={{marginBottom:"95%"}}>
-  <FlatList removeClippedSubviews={true} data={this.state.avail} showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false} keyExtractor={(item,index) => index } renderItem={({item,index})=> this.renderitemdata(item)
+  <FlatList removeClippedSubviews={true} data={this.state.avail} showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false} keyExtractor={(item,index) => index } renderItem={({item,index})=> this.renderitemdata(item,index)
    
  } /></View>
   
