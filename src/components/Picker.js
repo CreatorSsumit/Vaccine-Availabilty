@@ -1,5 +1,5 @@
-import React, {Fragment,Component} from 'react';
-import {Text, StyleSheet, View, TextInput,Dimensions, StatusBar, TouchableOpacity,FlatList,ImageBackground,RefreshControl} from 'react-native';
+import React, {Fragment,Component,useRef} from 'react';
+import {Text, StyleSheet, View,AppState, TextInput,Dimensions, StatusBar, TouchableOpacity,FlatList,ImageBackground,RefreshControl} from 'react-native';
 import {Picker} from '@react-native-picker/picker';
 import {connect} from "react-redux"
 import axios from "axios"
@@ -11,7 +11,8 @@ import FontAwesome from "react-native-vector-icons/FontAwesome"
 import MaterialIcons from "react-native-vector-icons/MaterialIcons"
 import Fontisto from "react-native-vector-icons/Fontisto";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import {handlecancel,shownotification,channeliddate} from "./notification.android"
+import {handlecancel,shownotification,channeliddate} from "./notification.android";
+
 
 
 var instance = axios.create({
@@ -49,13 +50,17 @@ const windowHeight = Dimensions.get('window').height;
     selectdistrict:"Select District",
     pinmode:false,
     pincode:'',
+    notify:false,
     vaccineAvailablity:false,
-    avail:[]
+    avail:null,
+    appstate:AppState.currentState
   }
   }
+
+
+ 
 
 checkuser =() =>{
-
 
 
 
@@ -63,49 +68,81 @@ checkuser =() =>{
 
     AsyncStorage.getItem('data').then(res => {
 
-   if(res){
-    if(res.length){
-
-     try{
-
-      if(res.length > 0){
-
-        if(res !== undefined && res.length > 0)
-          var data =  JSON.parse(res)
-
-         this.setState({
-           avail:data,
-           vaccineAvailablity:true
-         })
-
-       
   
-       
+
+   if(res){
+    try{
+
+      if(res){
+
+        if(res !== undefined && res != null)
+          var data =  JSON.parse(res)
+          var data1 = {...data,notify:true}
+
+         this.setState({...data1})
+         
+
       }else{
-        console.log('undefine')
+       this.setState({vaccineAvailablity:false})
       }
     
     }catch(error){console.log(error)}
     
-   }
      
-  }})
+  }else{
+    this.setState({
+      avail:null,
+      vaccineAvailablity:false
+    })
+  }
+
+})
 
 
 }
 
- 
+ componentWillUnmount(){
+   AppState.removeEventListener('change',this.handleappstate)
+ }
+
+ handleappstate = (nextappstate) =>{
+   this.setState({appstate:nextappstate});
+
+   if(nextappstate === 'background'){
+     console.log("app in background")
+     setTimeout(() => this.fetchdata(),2000);
+   }
+   if(nextappstate === 'active'){
+    console.log("app in active")
+    setTimeout(() => this.fetchdata(),2000);
+   }
+   if(nextappstate === 'inactive'){
+    setTimeout(() => this.fetchdata(),2000);
+   }
+ }
   
 
 componentDidMount(){
 
+
+  
+
 // AsyncStorage.clear()
 
-channeliddate('1')
+// channeliddate('1')
 
-shownotification("1" , "✔✔💉 Vaccine Available Now", "Vaccine available at your saved location . Open app to view available slots")
+// shownotification("1" , "✔✔💉 Vaccine Available Now", "Vaccine available at your saved location . Open app to view available slots")
 
 
+
+   if(!this.state.avail === null){
+    channeliddate('1')
+  
+    shownotification("1" , "✔✔💉 Vaccine Available Now", "Vaccine available at your saved location . Open app to view available slots")
+   
+
+   }
+  
 
 var d = new Date();
 var options = {
@@ -130,9 +167,12 @@ date = date.replace(/\//g, "-");
 
 
 this.checkuser()
+AppState.addEventListener('change',this.handleappstate)
 
 
 }
+
+
 
 
 componentDidUpdate(){
@@ -141,6 +181,11 @@ componentDidUpdate(){
 
 
 async fetchdata(){
+
+
+ 
+    
+    
 
 
   var d = new Date();
@@ -192,42 +237,56 @@ await instance.get(`https://cdn-api.co-vin.in/api/v2/appointment/sessions/public
 
         this.setState({
          avail:joinavail,
-          vaccineAvailablity:true
+          vaccineAvailablity:true,
+          notify:true
          })
 
-         console.log(joinavail)
+         
 
-         AsyncStorage.setItem('data',JSON.stringify(this.state.avail)).then((value)=> {
+        
+
+         AsyncStorage.setItem('data',JSON.stringify(this.state)).then((value)=> {
 
         }).catch(error => console.log(error))
 
         if(this.state.alert == 1){
-          alert('Thank you Notified me ,we will show you real time vaccine availabilty at your given location , if you want to go homepage so clean my app data')
+          alert('Thank you Notified me ,we will show you real time vaccine availabilty at your given location , if you want to go homepage so tap on reset button will show at top')
           
           this.setState({
             alert:this.state.alert +1
           })
+
+
+          channeliddate('1')
+         shownotification("1" , "✔✔💉 Vaccine Available Now", "Vaccine available at your saved location . Open app to view available slots")
+   
          
         }
       
-     setTimeout(() => this.fetchdata(),2000);
+    //  setTimeout(() => this.fetchdata(),2000);
 
 
 
 
+      }else if(av || av1 === 0){
+        this.setState({
+          vaccineAvailablity:false
+        })
       }
 
 
       if(this.state.alert == 1){
         this.setState({alert:this.state.alert + 1})
 
-        if(this.state.avail = [] && this.state.avail.length < 1 && this.state.district.length > 0){
-          alert('No Vaccine Available Now ,we will notify you soon when it available')
-          this.setState({
-            vaccineAvailablity:false
-          })
-        }
+       
 
+      }
+
+      if(this.state.avail = null && this.state.avail.length < 1 && this.state.district.length > 0){
+        alert('No Vaccine Available Now ,we will notify you soon when it available')
+        this.setState({
+          vaccineAvailablity:false
+        })
       }
 
      
@@ -255,7 +314,7 @@ await instance.get(`https://cdn-api.co-vin.in/api/v2/appointment/sessions/public
   
 
 
-  instance.get(`https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/findByPin?pincode=${this.state.pincode}&date=${date}-${month}-${year}`).then(e=> e.data).then(resw =>{
+ await instance.get(`https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/findByPin?pincode=${this.state.pincode}&date=${date}-${month}-${year}`).then(e=> e.data).then(resw =>{
    
          
   var avpin = resw.sessions.filter(es => es.available_capacity > 0)
@@ -265,32 +324,39 @@ await instance.get(`https://cdn-api.co-vin.in/api/v2/appointment/sessions/public
 
   var avpin2 = resss.sessions.filter(es => es.available_capacity > 0)
 
-   pinjoin = [...avpin , ...avpin2]
+   pinjoin = [...avpin ,...avpin2]
 
     if(avpin && avpin2){
       this.setState({
         avail:pinjoin,
-        vaccineAvailablity:true
+        vaccineAvailablity:true,
+        notify:true
       }) 
 
-      console.log(this.state.avail)
+      console.log(this.state.avail.length)
      
 
-      AsyncStorage.setItem('data',JSON.stringify(this.state.avail)).then((value)=> {
+      AsyncStorage.setItem('data',JSON.stringify(this.state)).then((value)=> {
  
       }).catch(error => console.log(error))
 
       if(this.state.alert == 1){
-        alert('Thank you Notified me ,we will show you real time vaccine availabilty at your given location , if you want to go homepage so clean my app data')
+        alert('Thank you Notified me ,we will show you real time vaccine availabilty at your given location , if you want to go homepage so tap on reset button will show at top')
         
         this.setState({
           alert:this.state.alert +1
         })
+
+
+        channeliddate('1')
+        shownotification("1" , "✔✔💉 Vaccine Available Now", "Vaccine available at your saved location . Open app to view available slots")
+  
+        
        
       }
     
    
-     setTimeout(() => this.fetchdata(),2000);
+    //  setTimeout(() => this.fetchdata(),2000);
 
     }
 
@@ -314,15 +380,7 @@ await instance.get(`https://cdn-api.co-vin.in/api/v2/appointment/sessions/public
     })
 
    }).catch((err)=> console.log(err))
- 
-   
-
- 
-
-
-
-   
-  }
+ }
 
 
 
@@ -439,7 +497,7 @@ changedatadistrict = value => {
 {this.state.vaccineAvailablity ? <View style={{backgroundColor:'#E7EEE9'}}>
 
 <View style={{padding:10}}>
-  <View style={{marginTop:"8.1%",width:'96%',height:80,backgroundColor:"#fff",margin:"2%",borderRadius:20,justifyContent:'center',alignItems:'center'}}><Text  style={{fontSize:20,fontWeight:"bold",color:'#3B5922'}}>Vaccine Available Now</Text><TouchableOpacity onPress={()=> this.resetchange()}><Text styel={{fontWeight:'bold'}}>Reset location ?</Text></TouchableOpacity></View>
+  <View style={{marginTop:"8.1%",width:'96%',height:80,backgroundColor:"#fff",margin:"2%",borderRadius:20,justifyContent:'center',alignItems:'center'}}><Text  style={{fontSize:20,fontWeight:"bold",color:'#3B5922'}}>Vaccine Available Now</Text>{this.state.notify ? <TouchableOpacity onPress={()=> this.resetchange()}><Text styel={{fontWeight:'bold'}}>Reset location ?</Text></TouchableOpacity> : null }</View>
   <View style={{marginBottom:"95%"}}>
   <FlatList removeClippedSubviews={true} data={this.state.avail} showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false} keyExtractor={(item,index) => index } renderItem={({item,index})=> this.renderitemdata(item,index)
    
@@ -522,7 +580,7 @@ changedatadistrict = value => {
    
               <TouchableOpacity onPress={()=> this.fetchdata()} style={{height:windowHeight/11,backgroundColor:"black",justifyContent:'center',alignItems:'center',margin:"10%", marginTop:'10%',borderRadius:10,borderWidth:2 ,borderColor:'black'}}>
              
-          <Text style={{color:'white',fontSize:20}}>Notifying me</Text>
+          <Text style={{color:'white',fontSize:20}}> Sync & Save </Text>
                
               </TouchableOpacity>
                </View>
