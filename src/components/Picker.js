@@ -84,7 +84,10 @@ checkuser =() =>{
     
    }
      
-  }})}
+  }})
+
+
+}
 
  
   
@@ -115,6 +118,8 @@ date = date.replace(/\//g, "-");
 })
 
 
+
+
 this.checkuser()
 
 
@@ -122,7 +127,7 @@ this.checkuser()
 
 
 componentDidUpdate(){
-  
+
 }
 
 
@@ -142,7 +147,7 @@ async fetchdata(){
 
   
   var date = String(d.toLocaleDateString("en", options));
-  newdate = date.replace(/\//g, "-");
+  var newdate = date.replace(/\//g, "-");
   
 
   var month = newdate.slice(0,2)
@@ -181,11 +186,20 @@ await instance.get(`https://cdn-api.co-vin.in/api/v2/appointment/sessions/public
           vaccineAvailablity:true
          })
 
+         console.log(joinavail)
+
          AsyncStorage.setItem('data',JSON.stringify(this.state.avail)).then((value)=> {
 
         }).catch(error => console.log(error))
 
-        
+        if(this.state.alert == 1){
+          alert('Thank you Notified me ,we will show you real time vaccine availabilty at your given loaction , if you want to go homepage so clean my app data')
+          
+          this.setState({
+            alert:this.state.alert +1
+          })
+         
+        }
       
      setTimeout(() => this.fetchdata(),2000);
 
@@ -195,7 +209,7 @@ await instance.get(`https://cdn-api.co-vin.in/api/v2/appointment/sessions/public
       }
 
 
-      if(this.state.alert === 1){
+      if(this.state.alert == 1){
         this.setState({alert:this.state.alert + 1})
 
         if(this.state.avail = [] && this.state.avail.length < 1 && this.state.district.length > 0){
@@ -250,11 +264,21 @@ await instance.get(`https://cdn-api.co-vin.in/api/v2/appointment/sessions/public
         vaccineAvailablity:true
       }) 
 
+      console.log(this.state.avail)
      
 
       AsyncStorage.setItem('data',JSON.stringify(this.state.avail)).then((value)=> {
  
       }).catch(error => console.log(error))
+
+      if(this.state.alert == 1){
+        alert('Thank you Notified me ,we will show you real time vaccine availabilty at your given loaction , if you want to go homepage so clean my app data')
+        
+        this.setState({
+          alert:this.state.alert +1
+        })
+       
+      }
     
    
      setTimeout(() => this.fetchdata(),2000);
@@ -330,7 +354,7 @@ changedatadistrict = value => {
   }
 
 
-  renderitemdata = (item ,index) =>{  
+  renderitemdata = (item ,index) =>{   console.log(index)
     return <View key={index}>
     <View style={{width:'96%',height:190,backgroundColor:'white',margin:'2%',borderRadius:20,flexDirection:'row',position:'relative'}}>
  
