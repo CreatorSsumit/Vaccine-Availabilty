@@ -54,7 +54,7 @@ const windowHeight = Dimensions.get('window').height;
 
 checkuser =() =>{
 
-  AsyncStorage.clear()
+//  AsyncStorage.clear()
 
     AsyncStorage.getItem('data').then(res => {
 
@@ -91,7 +91,7 @@ checkuser =() =>{
 
 componentDidMount(){
 
- AsyncStorage.clear()
+// AsyncStorage.clear()
 
 
 
@@ -184,6 +184,8 @@ await instance.get(`https://cdn-api.co-vin.in/api/v2/appointment/sessions/public
          AsyncStorage.setItem('data',JSON.stringify(this.state.avail)).then((value)=> {
 
         }).catch(error => console.log(error))
+
+        
       
      setTimeout(() => this.fetchdata(),2000);
 
@@ -378,6 +380,15 @@ changedatadistrict = value => {
   }
 
 
+  resetchange = () =>{
+  
+    AsyncStorage.setItem('data',JSON.stringify([])).then(e=>{
+      this.setState({
+        vaccineAvailablity:false
+      })
+    })
+  }
+
   
   render() {
     
@@ -395,7 +406,7 @@ changedatadistrict = value => {
 {this.state.vaccineAvailablity ? <View style={{backgroundColor:'#E7EEE9'}}>
 
 <View style={{padding:10}}>
-  <View style={{marginTop:"8.1%",width:'96%',height:80,backgroundColor:"#fff",margin:"2%",borderRadius:20,justifyContent:'center',alignItems:'center'}}><Text  style={{fontSize:20,fontWeight:"bold",color:'#3B5922'}}>Vaccine Available Now</Text><TouchableOpacity onPress={()=> { this.setState({vaccineAvailablity:false})}}><Text styel={{fontWeight:'bold'}}>Reset location ?</Text></TouchableOpacity></View>
+  <View style={{marginTop:"8.1%",width:'96%',height:80,backgroundColor:"#fff",margin:"2%",borderRadius:20,justifyContent:'center',alignItems:'center'}}><Text  style={{fontSize:20,fontWeight:"bold",color:'#3B5922'}}>Vaccine Available Now</Text><TouchableOpacity onPress={()=> this.resetchange()}><Text styel={{fontWeight:'bold'}}>Reset location ?</Text></TouchableOpacity></View>
   <View style={{marginBottom:"95%"}}>
   <FlatList removeClippedSubviews={true} data={this.state.avail} showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false} keyExtractor={(item,index) => index } renderItem={({item,index})=> this.renderitemdata(item,index)
    
