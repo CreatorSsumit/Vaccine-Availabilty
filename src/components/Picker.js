@@ -10,7 +10,9 @@ import FontAwesome5 from "react-native-vector-icons/FontAwesome5"
 import FontAwesome from "react-native-vector-icons/FontAwesome"
 import MaterialIcons from "react-native-vector-icons/MaterialIcons"
 import Fontisto from "react-native-vector-icons/Fontisto";
-import AsyncStorage from "@react-native-async-storage/async-storage"
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import {handlecancel,shownotification,channeliddate} from "./notification.android"
+
 
 var instance = axios.create({
   headers:{
@@ -54,6 +56,9 @@ const windowHeight = Dimensions.get('window').height;
 
 checkuser =() =>{
 
+
+
+
 //  AsyncStorage.clear()
 
     AsyncStorage.getItem('data').then(res => {
@@ -95,6 +100,10 @@ checkuser =() =>{
 componentDidMount(){
 
 // AsyncStorage.clear()
+
+channeliddate('1')
+
+shownotification("1" , "✔✔💉 Vaccine Available Now", "Vaccine available at your saved location . Open app to view available slots")
 
 
 
