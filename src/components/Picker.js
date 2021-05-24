@@ -193,7 +193,7 @@ await instance.get(`https://cdn-api.co-vin.in/api/v2/appointment/sessions/public
         }).catch(error => console.log(error))
 
         if(this.state.alert == 1){
-          alert('Thank you Notified me ,we will show you real time vaccine availabilty at your given loaction , if you want to go homepage so clean my app data')
+          alert('Thank you Notified me ,we will show you real time vaccine availabilty at your given location , if you want to go homepage so clean my app data')
           
           this.setState({
             alert:this.state.alert +1
@@ -272,7 +272,7 @@ await instance.get(`https://cdn-api.co-vin.in/api/v2/appointment/sessions/public
       }).catch(error => console.log(error))
 
       if(this.state.alert == 1){
-        alert('Thank you Notified me ,we will show you real time vaccine availabilty at your given loaction , if you want to go homepage so clean my app data')
+        alert('Thank you Notified me ,we will show you real time vaccine availabilty at your given location , if you want to go homepage so clean my app data')
         
         this.setState({
           alert:this.state.alert +1
