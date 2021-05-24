@@ -111,13 +111,30 @@ checkuser =() =>{
    if(nextappstate === 'background'){
      console.log("app in background")
      setTimeout(() => this.fetchdata(),2000);
+     
+      channeliddate('1')
+
+       shownotification("1" , "✔✔💉 Vaccine Available Now", "Vaccine available at your saved location . Open app to view available slots")
+      
+      
+     
+
+     
    }
    if(nextappstate === 'active'){
     console.log("app in active")
     setTimeout(() => this.fetchdata(),2000);
+    if(this.state.avail){
+      channeliddate('1')
+
+       shownotification("1" , "✔✔💉 Vaccine Available Now", "Vaccine available at your saved location . Open app to view available slots")
+      
+      
+     }
    }
    if(nextappstate === 'inactive'){
     setTimeout(() => this.fetchdata(),2000);
+
    }
  }
   
@@ -421,7 +438,7 @@ changedatadistrict = value => {
   }
 
 
-  renderitemdata = (item ,index) =>{   console.log(index)
+  renderitemdata = (item ,index) =>{   
     return <View key={index}>
     <View style={{width:'96%',height:190,backgroundColor:'white',margin:'2%',borderRadius:20,flexDirection:'row',position:'relative'}}>
  
@@ -435,9 +452,18 @@ changedatadistrict = value => {
       <View style={{width:"100%",height:"50%",position:'relative'}}>
       {/* <Text style={{fontSize:10,textAlign:'center',fontWeight:'bold'}}>{`Dose1 0 |  Dose2 0`}</Text> */}
       <View style={{justifyContent:'center',alignItems:'center',marginTop:10}}>
-      <View style={{width:70,height:70,backgroundColor:'#132A13',borderRadius:19,justifyContent:'center',alignItems:'center'}}>
+
+      {item.min_age_limit == 18  ?   <View style={{width:70,height:70,backgroundColor:'#F0D1D2',borderRadius:19,justifyContent:'center',alignItems:'center'}}>
+          <Text style={{fontSize:22,fontWeight:'bold',color:'#B93C40'}}>{item.min_age_limit}+</Text>
+        </View> :   <View style={{width:70,height:70,backgroundColor:'#132A13',borderRadius:19,justifyContent:'center',alignItems:'center'}}>
           <Text style={{fontSize:22,fontWeight:'bold',color:'white'}}>{item.min_age_limit}+</Text>
-        </View></View>
+        </View> }
+    
+    
+        
+        
+        
+        </View>
       </View>
     </View>
     <View style={{width:'67%',height:'100%',padding:10,flexWrap:'wrap',position:'relative'}}>
