@@ -1,5 +1,5 @@
 import React, {Fragment,Component,useRef} from 'react';
-import {Text, StyleSheet, View,AppState, TextInput,Dimensions, StatusBar, TouchableOpacity,FlatList,ImageBackground,RefreshControl} from 'react-native';
+import {Text, StyleSheet, View,AppState, TextInput,Dimensions, StatusBar, TouchableOpacity,FlatList,ImageBackground,RefreshControl, Alert} from 'react-native';
 import {Picker} from '@react-native-picker/picker';
 import {connect} from "react-redux"
 import axios from "axios"
@@ -237,6 +237,13 @@ try{
     alert('Select State & District to Continue')
   }
 
+  if(this.state.avail){
+    console.log(this.state.avail)
+   if(this.state.avail.length < 1){
+     alert('No Vaccine Available Now ,we will notify you soon when it available')
+   }
+  }
+
   if(this.state.selectdistrict){
 await instance.get(`https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/findByDistrict?district_id=${this.state.selectdistrict}&date=${date}-${month}-${year}`).then(e=> e.data).then(res =>{
     
@@ -290,6 +297,21 @@ await instance.get(`https://cdn-api.co-vin.in/api/v2/appointment/sessions/public
           vaccineAvailablity:false
         })
       }
+
+
+
+      if(this.state.avail){
+        console.log(this.state.avail)
+       if(this.state.avail.length < 1){
+        
+        Alert.alert('Want to stay here ?','No Vaccine Available Now ,we will notify you soon when it available, if you  click on yes then we will alert you at your search history basis,if you click on go back then we move on previos page and search new location',[{text:'Go Back',onPress: ()=>{ this.resetchange() },style:'cancel'},{text:'Yes',onPress:()=>  {}}])
+
+      
+       }
+      }
+
+
+
 
 
       if(this.state.alert == 1){
@@ -354,7 +376,7 @@ await instance.get(`https://cdn-api.co-vin.in/api/v2/appointment/sessions/public
      
 
       AsyncStorage.setItem('data',JSON.stringify(this.state)).then((value)=> {
- 
+
       }).catch(error => console.log(error))
 
       if(this.state.alert == 1){
@@ -366,32 +388,52 @@ await instance.get(`https://cdn-api.co-vin.in/api/v2/appointment/sessions/public
 
 
         channeliddate('1')
-        shownotification("1" , "✔✔💉 Vaccine Available Now", "Vaccine available at your saved location . Open app to view available slots")
-  
-        
+       shownotification("1" , "✔✔💉 Vaccine Available Now", "Vaccine available at your saved location . Open app to view available slots")
+ 
        
       }
     
-   
-    //  setTimeout(() => this.fetchdata(),2000);
+  //  setTimeout(() => this.fetchdata(),2000);
 
+
+
+
+    }else if(avpin || avpin2 === 0){
+      this.setState({
+        vaccineAvailablity:false
+      })
     }
 
 
+
+    if(this.state.avail){
+      console.log(this.state.avail)
+     if(this.state.avail.length < 1){
+      
+      Alert.alert('Want to stay here ?','No Vaccine Available Now ,we will notify you soon when it available, if you  click on yes then we will alert you at your search history basis,if you click on go back then we move on previos page and search new location',[{text:'Go Back',onPress: ()=>{ this.resetchange() },style:'cancel'},{text:'Yes',onPress:()=>  {}}])
+
+    
+     }
+    }
+
+
+
       
 
       
-      if(this.state.alert === 1){
-        this.setState({alert:this.state.alert + 1})
+    if(this.state.alert == 1){
+      this.setState({alert:this.state.alert + 1})
 
-        if(this.state.avail = [] && this.state.avail.length < 1){
-          alert('No Vaccine Available Now ,we will notify you soon when it available')
-          this.setState({
-            vaccineAvailablity:false
-          })
-        }
+     
 
-      }
+    }
+
+    if(this.state.avail = null && this.state.avail.length < 1 && this.state.pincode.length > 0){
+      alert('No Vaccine Available Now ,we will notify you soon when it available')
+      this.setState({
+        vaccineAvailablity:false
+      })
+    }
       
       
     })
