@@ -1,5 +1,5 @@
 import React, {Fragment,Component,useRef} from 'react';
-import {Text, StyleSheet, View,AppState, TextInput,Dimensions, StatusBar, TouchableOpacity,FlatList,ImageBackground,RefreshControl, Alert} from 'react-native';
+import {Text, StyleSheet, View,AppState, TextInput,Dimensions, StatusBar, TouchableOpacity,FlatList,ImageBackground,Linking, Alert} from 'react-native';
 import {Picker} from '@react-native-picker/picker';
 import {connect} from "react-redux"
 import axios from "axios"
@@ -265,7 +265,7 @@ await instance.get(`https://cdn-api.co-vin.in/api/v2/appointment/sessions/public
         }).catch(error => console.log(error))
 
         if(this.state.alert == 1){
-          alert('Thank you Notified me ,we will show you real time vaccine availabilty at your given location , if you want to go homepage so tap on reset button will show at top')
+          alert('Thank you Notified me ,we will show you real time vaccine availabilty at your given location ,if you want to go cowin site for BOOK APPOINTMENT so just click on any of available list,else want to go homepage so tap on reset button will show at top')
           
           this.setState({
             alert:this.state.alert +1
@@ -381,7 +381,7 @@ await instance.get(`https://cdn-api.co-vin.in/api/v2/appointment/sessions/public
       }).catch(error => console.log(error))
 
       if(this.state.alert == 1){
-        alert('Thank you Notified me ,we will show you real time vaccine availabilty at your given location , if you want to go homepage so tap on reset button will show at top')
+        alert('Thank you Notified me ,we will show you real time vaccine availabilty at your given location , if you want to go cowin site for BOOK APPOINTMENT so just click on any of available list , else want to go homepage so tap on reset button will show at top')
         
         this.setState({
           alert:this.state.alert +1
@@ -496,7 +496,7 @@ changedatadistrict = value => {
 
 
   renderitemdata = (item ,index) =>{   
-    return <View key={index}>
+    return <TouchableOpacity onPress={()=> Linking.openURL('https://selfregistration.cowin.gov.in/')}  key={index}>
     <View style={{width:'96%',height:190,backgroundColor:'white',margin:'2%',borderRadius:20,flexDirection:'row',position:'relative'}}>
  
     <View style={{width:'33%',height:'100%',borderRadius:20,position:'relative',}}>
@@ -548,7 +548,7 @@ changedatadistrict = value => {
     <FontAwesome5 name='hospital' size={30} color='black' /> */}
   
     </View>
-    </View>
+    </TouchableOpacity>
  
     
   }
