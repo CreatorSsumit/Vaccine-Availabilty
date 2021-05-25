@@ -300,14 +300,14 @@ await instance.get(`https://cdn-api.co-vin.in/api/v2/appointment/sessions/public
 
 
 
+
       if(this.state.avail){
         console.log(this.state.avail)
        if(this.state.avail.length < 1){
         
         Alert.alert('Want to stay here ?','No Vaccine Available Now ,we will notify you soon when it available, if you  click on yes then we will alert you at your search history basis,if you click on go back then we move on previos page and search new location',[{text:'Go Back',onPress: ()=>{ this.resetchange() },style:'cancel'},{text:'Yes',onPress:()=>  {}}])
 
-      
-       }
+      }
       }
 
 
@@ -372,7 +372,7 @@ await instance.get(`https://cdn-api.co-vin.in/api/v2/appointment/sessions/public
         notify:true
       }) 
 
-      console.log(this.state.avail.length)
+    
      
 
       AsyncStorage.setItem('data',JSON.stringify(this.state)).then((value)=> {
@@ -407,7 +407,7 @@ await instance.get(`https://cdn-api.co-vin.in/api/v2/appointment/sessions/public
 
 
     if(this.state.avail){
-      console.log(this.state.avail)
+      
      if(this.state.avail.length < 1){
       
       Alert.alert('Want to stay here ?','No Vaccine Available Now ,we will notify you soon when it available, if you  click on yes then we will alert you at your search history basis,if you click on go back then we move on previos page and search new location',[{text:'Go Back',onPress: ()=>{ this.resetchange() },style:'cancel'},{text:'Yes',onPress:()=>  {}}])
