@@ -602,19 +602,19 @@ changedatadistrict = value => {
   
 {this.state.pinmode ? 
            
-           <View style={{marginTop:'20%'}}></View> : <View style={{justifyContent:'center',width:windowWidth,height:windowHeight/3.1}}><Text style={{padding:20,width:"100%",fontSize:40,textDecorationStyle:'dotted',fontWeight:'bold',textAlign:'center'}}>We will Take responsiblity to Notify you</Text>
+           <View style={{marginTop:'20%'}}></View> : <View style={{justifyContent:'center',width:windowWidth,height:"30%"}}><Text style={{marginBottom:5,width:"100%",fontSize:40,textDecorationStyle:'dotted',fontWeight:'bold',textAlign:'center',marginTop:"5%"}}>We will Take responsiblity to Notify you</Text>
            
            
            
            
            </View>
      }
-     <View style={{width:windowWidth,height:windowHeight}}>
+     <View style={{width:windowWidth,height:"70%"}}>
 
-     <View style={{width:"96%",position:'relative',justifyContent:'center',backgroundColor:'#E7EEE9',margin:'2%',borderRadius:50}}>
+     <View style={{width:"96%",position:'relative',backgroundColor:'#E7EEE9',margin:'2%',borderRadius:50}}>
            
 
-           { this.state.pinmode ? <View style={{paddingTop:'26%'}}><Text style={{fontSize:40,fontWeight:'bold',textAlign:'center'}}>{`Enter Your\n6 Digit Pincode`}</Text><Text style={{textAlign:'center'}}>..........................................</Text><View style={{margin:"7%",marginBottom:'2%', marginTop:'60%'}}><Text style={{fontSize:15,marginBottom:10,fontWeight:'bold',textAlign:'center'}}>Enter Correct Pincode to Fetch Availabilty</Text>
+           { this.state.pinmode ? <View style={{paddingTop:'26%'}}><Text style={{fontSize:40,fontWeight:'bold',textAlign:'center'}}>{`Enter Your\n6 Digit Pincode`}</Text><Text style={{textAlign:'center'}}>..........................................</Text><View style={{margin:"7%",marginBottom:'2%', marginTop:'17%'}}><Text style={{fontSize:15,marginBottom:10,fontWeight:'bold',textAlign:'center'}}>Enter Correct Pincode to Fetch Availabilty</Text>
    
    
            <View style={{flexDirection:'row'}}>
@@ -622,17 +622,17 @@ changedatadistrict = value => {
            <TextInput  ref={"pin1ref"} autoFocus={true} onChangeText={(value) => {this.setState({pincode:value})}} value={this.state.pincode} style={{letterSpacing:10,borderWidth:2,margin:5,borderColor:'black',borderRadius:10, backgroundColor:'white',padding:3,width:'98%',height:70,textAlign:'center',fontSize:30,fontWeight:'bold'}} keyboardType='number-pad' maxLength={6}></TextInput>
        
            </View>
-           <TouchableOpacity onPress={()=> this.setState({pinmode:false})} style={{paddingTop:'7%'}}><Text style={{textAlign:'center',fontSize:13,fontWeight:'bold',color:'#FF8585'}}>I Knew State & District !</Text></TouchableOpacity>
+           <TouchableOpacity onPress={()=> this.setState({pinmode:false})} style={{padding:'3%'}}><Text style={{textAlign:'center',fontSize:13,fontWeight:'bold',color:'#FF8585'}}>I Knew State & District !</Text></TouchableOpacity>
             
            
            </View></View> : <View>
-             <Text style={{fontSize:20,fontWeight:'bold',margin:'10%'}}>Covid Vaccine Availablity</Text>
-            <View style={{margin:"10%", marginTop:'1%'}}>
+             <Text style={{fontSize:20,fontWeight:'bold',margin:'5%',marginLeft:"10%"}}>Covid Vaccine Availablity</Text>
+            <View style={{margin:"10%",marginBottom:"0%", marginTop:'1%'}}>
               <Text style={{fontSize:15,marginBottom:10,fontWeight:'bold'}}>Select State</Text>
               <TouchableOpacity style={{backgroundColor:"white",borderRadius:10,borderWidth:2 ,borderColor:'black'}}>
                <Picker style={{width:'98%',height:70}}
           selectedValue={this.state.selectstate}
-          itemStyle={{backgroundColor:"grey" ,color:'white',borderWidth:4,borderColor:'red',position:'absolute',zIndex:9999999999}}
+          itemStyle={{backgroundColor:"grey" ,color:'white',borderWidth:4,borderColor:'red'}}
           onValueChange={value => this.changedata(value)}>
    <Picker.Item enabled={false} col label="Select State" value="Select" />
          {this.statevalue()}
@@ -645,7 +645,7 @@ changedatadistrict = value => {
               </View>
    
    
-              <View style={{margin:"10%", marginTop:'1%'}}>
+              <View style={{margin:"10%",marginBottom:"3%", marginTop:'4%'}}>
               <Text style={{fontSize:15,marginBottom:10,fontWeight:'bold'}}>Select District</Text>
               <TouchableOpacity style={{backgroundColor:"white",borderRadius:10,borderWidth:2 ,borderColor:'black'}}>
                <Picker style={{width:'98%',height:70}}
@@ -669,7 +669,7 @@ changedatadistrict = value => {
    
    
    
-              <TouchableOpacity onPress={()=> this.fetchdata()} style={{height:windowHeight/11,backgroundColor:"black",justifyContent:'center',alignItems:'center',margin:"10%", marginTop:'10%',borderRadius:10,borderWidth:2 ,borderColor:'black'}}>
+              <TouchableOpacity onPress={()=> this.fetchdata()} style={{height:windowHeight/11,backgroundColor:"black",justifyContent:'center',alignItems:'center',borderRadius:10,borderWidth:2 ,borderColor:'black',width:'96%',marginLeft:"2%"}}>
              
           <Text style={{color:'white',fontSize:20}}> Sync & Save </Text>
                
