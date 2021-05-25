@@ -558,7 +558,18 @@ changedatadistrict = value => {
   
     AsyncStorage.setItem('data',JSON.stringify([])).then(e=>{
       this.setState({
-        vaccineAvailablity:false
+      
+  
+  
+    district:[],
+    districtkey:'',
+    selectstate:"Select State",
+    selectdistrict:"Select District",
+    pinmode:false,
+    pincode:'',
+    
+    vaccineAvailablity:false,
+    avail:null,
       })
     })
   }
