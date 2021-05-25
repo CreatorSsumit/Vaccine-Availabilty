@@ -621,13 +621,10 @@ changedatadistrict = value => {
               <TouchableOpacity style={{backgroundColor:"white",borderRadius:10,borderWidth:2 ,borderColor:'black'}}>
                <Picker style={{width:'98%',height:70}}
           selectedValue={this.state.selectstate}
-         
+          itemStyle={{backgroundColor:"grey" ,color:'white',borderWidth:4,borderColor:'red',position:'absolute',zIndex:9999999999}}
           onValueChange={value => this.changedata(value)}>
-   
-            
-          <Picker.Item enabled={false} col label="Select State" value="Select" />
+   <Picker.Item enabled={false} col label="Select State" value="Select" />
          {this.statevalue()}
-        
         </Picker>
           
                
@@ -642,7 +639,7 @@ changedatadistrict = value => {
               <TouchableOpacity style={{backgroundColor:"white",borderRadius:10,borderWidth:2 ,borderColor:'black'}}>
                <Picker style={{width:'98%',height:70}}
           selectedValue={this.state.selectdistrict}
-          itemStyle={{backgroundColor:"grey" ,color:'white',borderWidth:4,borderColor:'red'}}
+          itemStyle={{backgroundColor:"grey" ,color:'white',borderWidth:4,borderColor:'red',position:'absolute',zIndex:9999999999}}
           onValueChange={value => this.changedatadistrict(value)} >
           <Picker.Item  enabled={false} label="Select District" value="Select" />
           {this.state.district ? this.state.district.map((data) => {
