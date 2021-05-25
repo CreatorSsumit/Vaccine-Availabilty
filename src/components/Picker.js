@@ -112,11 +112,6 @@ checkuser =() =>{
      console.log("app in background")
      setTimeout(() => this.fetchdata(),2000);
      
-      channeliddate('1')
-
-       shownotification("1" , "✔✔💉 Vaccine Available Now", "Vaccine available at your saved location . Open app to view available slots")
-      
-      
      
 
      
@@ -124,13 +119,7 @@ checkuser =() =>{
    if(nextappstate === 'active'){
     console.log("app in active")
     setTimeout(() => this.fetchdata(),2000);
-    if(this.state.avail){
-      channeliddate('1')
-
-       shownotification("1" , "✔✔💉 Vaccine Available Now", "Vaccine available at your saved location . Open app to view available slots")
-      
-      
-     }
+    
    }
    if(nextappstate === 'inactive'){
     setTimeout(() => this.fetchdata(),2000);
@@ -267,6 +256,8 @@ await instance.get(`https://cdn-api.co-vin.in/api/v2/appointment/sessions/public
 
          
 
+         
+
         
 
          AsyncStorage.setItem('data',JSON.stringify(this.state)).then((value)=> {
@@ -281,9 +272,7 @@ await instance.get(`https://cdn-api.co-vin.in/api/v2/appointment/sessions/public
           })
 
 
-          channeliddate('1')
-         shownotification("1" , "✔✔💉 Vaccine Available Now", "Vaccine available at your saved location . Open app to view available slots")
-   
+         
          
         }
       
@@ -302,11 +291,19 @@ await instance.get(`https://cdn-api.co-vin.in/api/v2/appointment/sessions/public
 
 
       if(this.state.avail){
-        console.log(this.state.avail)
+        
        if(this.state.avail.length < 1){
         
+        channeliddate('1')
+       shownotification("1" , "✔✔💉No Vaccine Available Now", " No Vaccine available at your saved location . Open app to view available slots")
+ 
         Alert.alert('Want to stay here ?','No Vaccine Available Now ,we will notify you soon when it available, if you  click on yes then we will alert you at your search history basis,if you click on go back then we move on previos page and search new location',[{text:'Go Back',onPress: ()=>{ this.resetchange() },style:'cancel'},{text:'Yes',onPress:()=>  {}}])
 
+      }else{
+        
+        channeliddate('1')
+       shownotification("1" , "✔✔💉 Vaccine Available Now", "Vaccine available at your saved location . Open app to view available slots")
+ 
       }
       }
 
@@ -326,6 +323,10 @@ await instance.get(`https://cdn-api.co-vin.in/api/v2/appointment/sessions/public
         this.setState({
           vaccineAvailablity:false
         })
+        
+        channeliddate('1')
+       shownotification("1" , "✔✔💉 No Vaccine Available Now", " No Vaccine available at your saved location . Open app to view available slots")
+ 
       }
 
      
@@ -387,9 +388,7 @@ await instance.get(`https://cdn-api.co-vin.in/api/v2/appointment/sessions/public
         })
 
 
-        channeliddate('1')
-       shownotification("1" , "✔✔💉 Vaccine Available Now", "Vaccine available at your saved location . Open app to view available slots")
- 
+       
        
       }
     
@@ -412,7 +411,15 @@ await instance.get(`https://cdn-api.co-vin.in/api/v2/appointment/sessions/public
       
       Alert.alert('Want to stay here ?','No Vaccine Available Now ,we will notify you soon when it available, if you  click on yes then we will alert you at your search history basis,if you click on go back then we move on previos page and search new location',[{text:'Go Back',onPress: ()=>{ this.resetchange() },style:'cancel'},{text:'Yes',onPress:()=>  {}}])
 
+      channeliddate('1')
+      shownotification("1" , "✔✔💉 No Vaccine Available Now", " No Vaccine available at your saved location . Open app to view available slots")
+
     
+     }else{
+       
+      channeliddate('1')
+      shownotification("1" , "✔✔💉 Vaccine Available Now", "Vaccine available at your saved location . Open app to view available slots")
+
      }
     }
 
@@ -430,9 +437,17 @@ await instance.get(`https://cdn-api.co-vin.in/api/v2/appointment/sessions/public
 
     if(this.state.avail = null && this.state.avail.length < 1 && this.state.pincode.length > 0){
       alert('No Vaccine Available Now ,we will notify you soon when it available')
+      
+      channeliddate('1')
+      shownotification("1" , "✔✔💉 No Vaccine Available Now", "No Vaccine available at your saved location . Open app to view available slots")
+
       this.setState({
         vaccineAvailablity:false
       })
+    }else{
+      channeliddate('1')
+      shownotification("1" , "✔✔💉  Vaccine Available Now", "Vaccine available at your saved location . Open app to view available slots")
+
     }
       
       
