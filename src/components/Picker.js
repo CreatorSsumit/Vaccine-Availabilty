@@ -43,6 +43,7 @@ const windowHeight = Dimensions.get('window').height;
   super(props);
   this.state={
     alert:1,
+    noti:3,
     states:[],
     statekey:null,
     district:[],
@@ -142,12 +143,12 @@ componentDidMount(){
 
 
 
-   if(!this.state.avail === null){
+   if(!this.state.avail === null  && this.state.noti < 4){
     channeliddate('1')
   
     shownotification("1" , "✔✔💉 Vaccine Available Now", "Vaccine available at your saved location . Open app to view available slots")
    
-
+this.setState({noti:this.state.noti + 1})
    }
   
 
@@ -252,6 +253,7 @@ await instance.get(`https://cdn-api.co-vin.in/api/v2/appointment/sessions/public
         joinavail = [...av,...av1];
 
          joinavail.sort((a,b) => a.min_age_limit > b.min_age_limit ? 1 : -1 )
+         
      
 
         this.setState({
@@ -281,8 +283,8 @@ await instance.get(`https://cdn-api.co-vin.in/api/v2/appointment/sessions/public
          
          
         }
-      
-    //  setTimeout(() => this.fetchdata(),2000);
+      console.log(joinavail)
+  setTimeout(() => this.fetchdata(),2000);
 
 
 
@@ -306,10 +308,14 @@ await instance.get(`https://cdn-api.co-vin.in/api/v2/appointment/sessions/public
         Alert.alert('Want to stay here ?','No Vaccine Available Now ,we will notify you soon when it available, if you  click on yes then we will alert you at your search history basis,if you click on go back then we move on previos page and search new location',[{text:'Go Back',onPress: ()=>{ this.resetchange() },style:'cancel'},{text:'Yes',onPress:()=>  {}}])
 
       }else{
+
+        if(this.state.noti < 4){
+          channeliddate('1')
+          shownotification("1" , "✔✔💉 Vaccine Available Now", "Vaccine available at your saved location . Open app to view available slots")
+          this.setState({noti:this.state.noti + 1})
+        }
         
-        channeliddate('1')
-       shownotification("1" , "✔✔💉 Vaccine Available Now", "Vaccine available at your saved location . Open app to view available slots")
- 
+        
       }
       }
 
@@ -372,6 +378,10 @@ await instance.get(`https://cdn-api.co-vin.in/api/v2/appointment/sessions/public
 
    pinjoin = [...avpin ,...avpin2]
 
+   pinjoin.sort((a,b) => a.min_age_limit > b.min_age_limit ? 1 : -1 )
+        
+     
+
     if(avpin && avpin2){
       this.setState({
         avail:pinjoin,
@@ -422,10 +432,14 @@ await instance.get(`https://cdn-api.co-vin.in/api/v2/appointment/sessions/public
 
     
      }else{
-       
-      channeliddate('1')
-      shownotification("1" , "✔✔💉 Vaccine Available Now", "Vaccine available at your saved location . Open app to view available slots")
 
+      if(this.state.noti < 4 ){
+        channeliddate('1')
+        shownotification("1" , "✔✔💉 Vaccine Available Now", "Vaccine available at your saved location . Open app to view available slots")
+        this.setState({noti:this.state.noti + 1})
+      }
+       
+     
      }
     }
 
@@ -451,9 +465,10 @@ await instance.get(`https://cdn-api.co-vin.in/api/v2/appointment/sessions/public
         vaccineAvailablity:false
       })
     }else{
+      if(this.state.noti < 4)
       channeliddate('1')
       shownotification("1" , "✔✔💉  Vaccine Available Now", "Vaccine available at your saved location . Open app to view available slots")
-
+      this.setState({noti:this.state.noti + 1})
     }
       
       
@@ -566,7 +581,7 @@ changedatadistrict = value => {
       this.setState({
       
   
-  
+   noti:3,
     district:[],
     districtkey:'',
     selectstate:"Select State",
