@@ -15,6 +15,7 @@ import {handlecancel,shownotification,channeliddate} from "./notification.androi
 
 
 
+
 var instance = axios.create({
   headers:{
     'Accept-Encoding':'gzip,deflate,br',
@@ -602,19 +603,19 @@ changedatadistrict = value => {
   
 {this.state.pinmode ? 
            
-           <View style={{marginTop:'20%'}}></View> : <View style={{justifyContent:'center',width:windowWidth,height:"30%"}}><Text style={{marginBottom:5,width:"100%",fontSize:40,textDecorationStyle:'dotted',fontWeight:'bold',textAlign:'center',marginTop:"5%"}}>We will Take responsiblity to Notify you</Text>
+           <View style={{marginTop:'20%'}}></View> : <View style={{position:'relative',top:"10%",width:windowWidth,height:"30%",alignItems:'center'}}><Text style={{marginBottom:5,width:"70%",fontSize:windowHeight/30,textDecorationStyle:'dotted',fontWeight:'bold',textAlign:'center',marginTop:"5%"}}>We will Take responsiblity to Notify you</Text>
            
            
            
            
            </View>
      }
-     <View style={{width:windowWidth,height:"70%"}}>
+     <View style={{width:windowWidth,height:"70%",justifyContent:"flex-end"}}>
 
-     <View style={{width:"96%",position:'relative',backgroundColor:'#E7EEE9',margin:'2%',borderRadius:50}}>
+     <View style={{width:"96%",position:'relative',backgroundColor:'#E7EEE9',margin:'2%',borderRadius:20,paddingBottom:'8%'}}>
            
 
-           { this.state.pinmode ? <View style={{paddingTop:'26%'}}><Text style={{fontSize:40,fontWeight:'bold',textAlign:'center'}}>{`Enter Your\n6 Digit Pincode`}</Text><Text style={{textAlign:'center'}}>..........................................</Text><View style={{margin:"7%",marginBottom:'2%', marginTop:'17%'}}><Text style={{fontSize:15,marginBottom:10,fontWeight:'bold',textAlign:'center'}}>Enter Correct Pincode to Fetch Availabilty</Text>
+           { this.state.pinmode ? <View style={{paddingTop:"10%"}}><Text style={{fontSize:40,fontWeight:'bold',textAlign:'center'}}>{`Enter Your\n6 Digit Pincode`}</Text><Text style={{textAlign:'center'}}>..........................................</Text><View style={{margin:"7%",marginBottom:'2%', marginTop:'17%'}}><Text style={{fontSize:15,marginBottom:10,fontWeight:'bold',textAlign:'center'}}>Enter Correct Pincode to Fetch Availabilty</Text>
    
    
            <View style={{flexDirection:'row'}}>
@@ -669,7 +670,7 @@ changedatadistrict = value => {
    
    
    
-              <TouchableOpacity onPress={()=> this.fetchdata()} style={{height:windowHeight/11,backgroundColor:"black",justifyContent:'center',alignItems:'center',borderRadius:10,borderWidth:2 ,borderColor:'black',width:'96%',marginLeft:"2%"}}>
+              <TouchableOpacity onPress={()=> this.fetchdata()} style={{height:windowHeight/11,backgroundColor:"black",justifyContent:'center',alignItems:'center',borderRadius:10,borderWidth:2 ,borderColor:'black',width:'96%',marginLeft:"2%",position:'relative',top:'3%'}}>
              
           <Text style={{color:'white',fontSize:20}}> Sync & Save </Text>
                
@@ -703,10 +704,4 @@ changedatadistrict = value => {
   }
 }
 
- 
-
-const styles = StyleSheet.create({
- 
-});
-
-export default App;
+ module.exports = App;
