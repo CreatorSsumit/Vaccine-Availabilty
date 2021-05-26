@@ -228,7 +228,7 @@ try{
   }
 
   if(this.state.avail){
-    console.log(this.state.avail)
+    
    if(this.state.avail.length < 1){
      alert('No Vaccine Available Now ,we will notify you soon when it available')
    }
@@ -247,7 +247,12 @@ await instance.get(`https://cdn-api.co-vin.in/api/v2/appointment/sessions/public
 
       if(av && av1){
 
+
+
         joinavail = [...av,...av1];
+
+         joinavail.sort((a,b) => a.min_age_limit > b.min_age_limit ? 1 : -1 )
+     
 
         this.setState({
          avail:joinavail,
