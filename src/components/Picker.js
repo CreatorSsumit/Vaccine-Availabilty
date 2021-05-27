@@ -80,7 +80,7 @@ checkuser =() =>{
         if(res !== undefined && res != null)
           var data =  JSON.parse(res)
           var data1 = {...data,notify:true}
-
+        
          this.setState({...data1})
          
 
@@ -112,19 +112,14 @@ checkuser =() =>{
 
    if(nextappstate === 'background'){
      console.log("app in background")
-     this.fetchdata()
-     
-     
-
-     
-   }
+}
    if(nextappstate === 'active'){
     console.log("app in active")
-   this.fetchdata()
+    
     
    }
    if(nextappstate === 'inactive'){
-    this.fetchdata()
+    console.log("app in active")
 
    }
  }
@@ -175,7 +170,9 @@ date = date.replace(/\//g, "-");
 
 
 this.checkuser()
+this.fetchdata()
 AppState.addEventListener('change',this.handleappstate)
+
 
 
 }
@@ -224,8 +221,9 @@ try{
 
   if(this.state.states.length <= 0 ){
     alert('Select State')
-  }else if(this.state.district.length <= 0 && !this.state.pinmode){
+  }else if(this.state.district.length <= 0 && !this.state.pinmode && this.state.alert === 1){
     alert('Select State & District to Continue')
+    this.setState({alert:2})
   }
 
   if(this.state.avail){
@@ -262,6 +260,7 @@ await instance.get(`https://cdn-api.co-vin.in/api/v2/appointment/sessions/public
           notify:true
          })
 
+         console.log(joinavail.length)
          
 AsyncStorage.setItem('data',JSON.stringify(this.state)).then((value)=> {
 
@@ -281,12 +280,9 @@ AsyncStorage.setItem('data',JSON.stringify(this.state)).then((value)=> {
          
         }
    
-  setTimeout(() => this.fetchdata(),4000);
+//  setTimeout(() => this.fetchdata(),4000);
 
-
-
-
-      }else if(av || av1 === 0){
+ }else if(av || av1 === 0){
         this.setState({
           vaccineAvailablity:false
         })
@@ -390,7 +386,7 @@ AsyncStorage.setItem('data',JSON.stringify(this.state)).then((value)=> {
 
          pinjoin.sort((a,b) => a.min_age_limit > b.min_age_limit ? 1 : -1 )
          
-         console.log(pinjoin)
+         console.log(pinjoin.length)
 
 
       this.setState({
@@ -416,7 +412,7 @@ AsyncStorage.setItem('data',JSON.stringify(this.state)).then((value)=> {
        
       }
 
-      setTimeout(() => this.fetchdata(),4000);
+   //   setTimeout(() => this.fetchdata(),4000);
 
 
 
@@ -476,6 +472,8 @@ AsyncStorage.setItem('data',JSON.stringify(this.state)).then((value)=> {
   //  
  
  }).catch(err => console.log(err))
+
+ setTimeout(() => this.fetchdata(),4000);
 
  }
 
@@ -578,6 +576,12 @@ changedatadistrict = value => {
 
 
   resetchange = () =>{
+
+    var id = window.setTimeout(function(){},0);
+console.log(id)
+    while (id--){
+      window.clearTimeout(id);
+    }
   
     AsyncStorage.setItem('data',JSON.stringify([])).then(e=>{
       this.setState({
@@ -590,7 +594,7 @@ changedatadistrict = value => {
     selectdistrict:"Select District",
     pinmode:false,
     pincode:'',
-    
+    alert:1,
     vaccineAvailablity:false,
     avail:null,
       })
