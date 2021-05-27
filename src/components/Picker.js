@@ -112,7 +112,7 @@ checkuser =() =>{
 
    if(nextappstate === 'background'){
      console.log("app in background")
-     setTimeout(() => this.fetchdata(),2000);
+     this.fetchdata()
      
      
 
@@ -120,11 +120,11 @@ checkuser =() =>{
    }
    if(nextappstate === 'active'){
     console.log("app in active")
-    setTimeout(() => this.fetchdata(),2000);
+   this.fetchdata()
     
    }
    if(nextappstate === 'inactive'){
-    setTimeout(() => this.fetchdata(),2000);
+    this.fetchdata()
 
    }
  }
@@ -263,14 +263,11 @@ await instance.get(`https://cdn-api.co-vin.in/api/v2/appointment/sessions/public
          })
 
          
-
-         
-
-        
-
-         AsyncStorage.setItem('data',JSON.stringify(this.state)).then((value)=> {
+AsyncStorage.setItem('data',JSON.stringify(this.state)).then((value)=> {
 
         }).catch(error => console.log(error))
+
+
 
         if(this.state.alert == 1){
           alert('Thank you Notified me ,we will show you real time vaccine availabilty at your given location ,if you want to go cowin site for BOOK APPOINTMENT so just click on any of available list,else want to go homepage so tap on reset button will show at top')
@@ -283,8 +280,8 @@ await instance.get(`https://cdn-api.co-vin.in/api/v2/appointment/sessions/public
          
          
         }
-      console.log(joinavail)
-  setTimeout(() => this.fetchdata(),2000);
+   
+  setTimeout(() => this.fetchdata(),4000);
 
 
 
@@ -366,7 +363,7 @@ await instance.get(`https://cdn-api.co-vin.in/api/v2/appointment/sessions/public
   
 
 
- await instance.get(`https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/findByPin?pincode=${this.state.pincode}&date=${date}-${month}-${year}`).then(e=> e.data).then(resw =>{
+  instance.get(`https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/findByPin?pincode=${this.state.pincode}&date=${date}-${month}-${year}`).then(e=> e.data).then(resw =>{
    
          
   var avpin = resw.sessions.filter(es => es.available_capacity > 0)
@@ -374,30 +371,41 @@ await instance.get(`https://cdn-api.co-vin.in/api/v2/appointment/sessions/public
   instance.get(`https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/findByPin?pincode=${this.state.pincode}&date=${tommdate}-${month}-${year}`).then(e=> e.data).then(resss =>{
 
 
-  var avpin2 = resss.sessions.filter(es => es.available_capacity > 0)
 
-   pinjoin = [...avpin ,...avpin2]
 
-   pinjoin.sort((a,b) => a.min_age_limit > b.min_age_limit ? 1 : -1 )
-        
-     
+ var avpin2 = resss.sessions.filter(es => es.available_capacity > 0)
+
+
+ 
+  
+  //  console.log(pinjoin + "pincode")
+   
 
     if(avpin && avpin2){
+
+
+      pinjoin = [...avpin,...avpin2]
+  
+
+
+         pinjoin.sort((a,b) => a.min_age_limit > b.min_age_limit ? 1 : -1 )
+         
+         console.log(pinjoin)
+
+
       this.setState({
         avail:pinjoin,
         vaccineAvailablity:true,
         notify:true
       }) 
 
-    
-     
 
       AsyncStorage.setItem('data',JSON.stringify(this.state)).then((value)=> {
 
       }).catch(error => console.log(error))
 
       if(this.state.alert == 1){
-        alert('Thank you Notified me ,we will show you real time vaccine availabilty at your given location , if you want to go cowin site for BOOK APPOINTMENT so just click on any of available list , else want to go homepage so tap on reset button will show at top')
+        alert('Thank you Notified me ,we will show you real time vaccine availabilty at your given location ,if you want to go cowin site for BOOK APPOINTMENT so just click on any of available list,else want to go homepage so tap on reset button will show at top')
         
         this.setState({
           alert:this.state.alert +1
@@ -407,8 +415,8 @@ await instance.get(`https://cdn-api.co-vin.in/api/v2/appointment/sessions/public
        
        
       }
-    
-  //  setTimeout(() => this.fetchdata(),2000);
+
+      setTimeout(() => this.fetchdata(),4000);
 
 
 
@@ -419,62 +427,56 @@ await instance.get(`https://cdn-api.co-vin.in/api/v2/appointment/sessions/public
       })
     }
 
-
-
     if(this.state.avail){
-      
-     if(this.state.avail.length < 1){
-      
-      Alert.alert('Want to stay here ?','No Vaccine Available Now ,we will notify you soon when it available, if you  click on yes then we will alert you at your search history basis,if you click on go back then we move on previos page and search new location',[{text:'Go Back',onPress: ()=>{ this.resetchange() },style:'cancel'},{text:'Yes',onPress:()=>  {}}])
+        
+      if(this.state.avail.length < 1){
+       
+       channeliddate('1')
+      shownotification("1" , "✔✔💉No Vaccine Available Now", " No Vaccine available at your saved location . Open app to view available slots")
 
-      channeliddate('1')
-      shownotification("1" , "✔✔💉 No Vaccine Available Now", " No Vaccine available at your saved location . Open app to view available slots")
+       Alert.alert('Want to stay here ?','No Vaccine Available Now ,we will notify you soon when it available, if you  click on yes then we will alert you at your search history basis,if you click on go back then we move on previos page and search new location',[{text:'Go Back',onPress: ()=>{ this.resetchange() },style:'cancel'},{text:'Yes',onPress:()=>  {}}])
 
-    
      }else{
 
-      if(this.state.noti < 4 ){
-        channeliddate('1')
-        shownotification("1" , "✔✔💉 Vaccine Available Now", "Vaccine available at your saved location . Open app to view available slots")
-        this.setState({noti:this.state.noti + 1})
-      }
+       if(this.state.noti < 4){
+         channeliddate('1')
+         shownotification("1" , "✔✔💉 Vaccine Available Now", "Vaccine available at your saved location . Open app to view available slots")
+         this.setState({noti:this.state.noti + 1})
+       }
        
-     
+       
      }
-    }
+     }
 
 
+
+
+
+     if(this.state.alert == 1){
+       this.setState({alert:this.state.alert + 1})
 
       
 
-      
-    if(this.state.alert == 1){
-      this.setState({alert:this.state.alert + 1})
+     }
+
+     if(this.state.avail = null && this.state.avail.length < 1 && this.state.pincode.length > 0){
+       alert('No Vaccine Available Now ,we will notify you soon when it available')
+       this.setState({
+         vaccineAvailablity:false
+       })
+       
+       channeliddate('1')
+      shownotification("1" , "✔✔💉 No Vaccine Available Now", " No Vaccine available at your saved location . Open app to view available slots")
+
+     }
 
      
+     }).catch(e=> console.log("cvhh"))
+ 
+  //  
+ 
+ }).catch(err => console.log(err))
 
-    }
-
-    if(this.state.avail = null && this.state.avail.length < 1 && this.state.pincode.length > 0){
-      alert('No Vaccine Available Now ,we will notify you soon when it available')
-      
-      channeliddate('1')
-      shownotification("1" , "✔✔💉 No Vaccine Available Now", "No Vaccine available at your saved location . Open app to view available slots")
-
-      this.setState({
-        vaccineAvailablity:false
-      })
-    }else{
-      if(this.state.noti < 4)
-      channeliddate('1')
-      shownotification("1" , "✔✔💉  Vaccine Available Now", "Vaccine available at your saved location . Open app to view available slots")
-      this.setState({noti:this.state.noti + 1})
-    }
-      
-      
-    })
-
-   }).catch((err)=> console.log(err))
  }
 
 
