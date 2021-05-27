@@ -12,6 +12,7 @@ import MaterialIcons from "react-native-vector-icons/MaterialIcons"
 import Fontisto from "react-native-vector-icons/Fontisto";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {handlecancel,shownotification,channeliddate} from "./notification.android";
+import {List} from "react-virtualized"
 
 
 
@@ -112,9 +113,11 @@ checkuser =() =>{
 
    if(nextappstate === 'background'){
      console.log("app in background")
+     this.fetchdata()
 }
    if(nextappstate === 'active'){
     console.log("app in active")
+    this.fetchdata()
     
     
    }
@@ -170,9 +173,8 @@ date = date.replace(/\//g, "-");
 
 
 this.checkuser()
-this.fetchdata()
-AppState.addEventListener('change',this.handleappstate)
 
+AppState.addEventListener('change',this.handleappstate)
 
 
 }
@@ -219,11 +221,12 @@ try{
   var pinjoin = [];
 
 
-  if(this.state.states.length <= 0 ){
+  if(this.state.states.length <= 0 && this.state.alert < 2 && !this.state.vaccineAvailablity && !this.state.avail){
     alert('Select State')
-  }else if(this.state.district.length <= 0 && !this.state.pinmode && this.state.alert === 1){
+    this.setState({alert:this.state.alert+1})
+  }else if(this.state.district.length <= 0 && !this.state.pinmode && this.state.alert < 2 && !this.state.vaccineAvailablity&& !this.state.avail){
     alert('Select State & District to Continue')
-    this.setState({alert:2})
+    this.setState({alert:this.state.alert+1})
   }
 
   if(this.state.avail){
@@ -236,19 +239,20 @@ try{
   if(this.state.selectdistrict){
 await instance.get(`https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/findByDistrict?district_id=${this.state.selectdistrict}&date=${date}-${month}-${year}`).then(e=> e.data).then(res =>{
     
-      var av = res.sessions.filter(es => es.available_capacity > 0)
+   var av = res.sessions.filter(es => es.available_capacity > 0)
 
 
    instance.get(`https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/findByDistrict?district_id=${this.state.selectdistrict}&date=${tommdate}-${month}-${year}`).then(en=> en.data).then(res1 =>{
-
+   
+   
       var av1 =  res1.sessions.filter(es => es.available_capacity > 0)
 
 
       if(av && av1){
+                     
+                     
 
-
-
-        joinavail = [...av,...av1];
+         joinavail = [...av,...av1]
 
          joinavail.sort((a,b) => a.min_age_limit > b.min_age_limit ? 1 : -1 )
          
@@ -259,6 +263,8 @@ await instance.get(`https://cdn-api.co-vin.in/api/v2/appointment/sessions/public
           vaccineAvailablity:true,
           notify:true
          })
+
+         console.log(joinavail.length)
 
          
          
@@ -274,13 +280,11 @@ AsyncStorage.setItem('data',JSON.stringify(this.state)).then((value)=> {
           this.setState({
             alert:this.state.alert +1
           })
-
-
-         
-         
+       
         }
    
-//  setTimeout(() => this.fetchdata(),4000);
+    setTimeout(() => this.fetchdata(),4000);
+
 
  }else if(av || av1 === 0){
         this.setState({
@@ -316,7 +320,7 @@ AsyncStorage.setItem('data',JSON.stringify(this.state)).then((value)=> {
 
 
 
-      if(this.state.alert == 1){
+      if(this.state.alert < 2){
         this.setState({alert:this.state.alert + 1})
 
        
@@ -340,7 +344,16 @@ AsyncStorage.setItem('data',JSON.stringify(this.state)).then((value)=> {
 
 
       
-      }).catch(e=> console.log("cvhh"))
+      }).catch(e=>  {
+
+
+
+        var id = window.setTimeout(function(){},0);
+        console.log(id)
+            while (id--){
+              window.clearTimeout(id);
+            }
+      }   )
   
    //  
   })
@@ -372,9 +385,7 @@ AsyncStorage.setItem('data',JSON.stringify(this.state)).then((value)=> {
  var avpin2 = resss.sessions.filter(es => es.available_capacity > 0)
 
 
- 
-  
-  //  console.log(pinjoin + "pincode")
+
    
 
     if(avpin && avpin2){
@@ -384,12 +395,9 @@ AsyncStorage.setItem('data',JSON.stringify(this.state)).then((value)=> {
   
 
 
-         pinjoin.sort((a,b) => a.min_age_limit > b.min_age_limit ? 1 : -1 )
+        pinjoin.sort((a,b) => a.min_age_limit > b.min_age_limit ? 1 : -1 )
          
-         
-
-
-      this.setState({
+        this.setState({
         avail:pinjoin,
         vaccineAvailablity:true,
         notify:true
@@ -406,13 +414,11 @@ AsyncStorage.setItem('data',JSON.stringify(this.state)).then((value)=> {
         this.setState({
           alert:this.state.alert +1
         })
+  }
 
+  console.log(pinjoin.length)
 
-       
-       
-      }
-
-   //   setTimeout(() => this.fetchdata(),4000);
+  setTimeout(() => this.fetchdata(),4000);
 
 
 
@@ -448,7 +454,7 @@ AsyncStorage.setItem('data',JSON.stringify(this.state)).then((value)=> {
 
 
 
-     if(this.state.alert == 1){
+     if(this.state.alert < 2){
        this.setState({alert:this.state.alert + 1})
 
       
@@ -467,16 +473,23 @@ AsyncStorage.setItem('data',JSON.stringify(this.state)).then((value)=> {
      }
 
      
-     }).catch(e=> console.log("cvhh"))
+     }).catch(e=> {
+
+      var id = window.setTimeout(function(){},0);
+      console.log(id)
+          while (id--){
+            window.clearTimeout(id);
+          }
+
+     })
  
   //  
  
  }).catch(err => console.log(err))
 
- setTimeout(() => this.fetchdata(),4000);
+
 
  }
-
 
 
 
