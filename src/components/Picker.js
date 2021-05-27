@@ -260,7 +260,7 @@ await instance.get(`https://cdn-api.co-vin.in/api/v2/appointment/sessions/public
           notify:true
          })
 
-         console.log(joinavail.length)
+         
          
 AsyncStorage.setItem('data',JSON.stringify(this.state)).then((value)=> {
 
@@ -386,7 +386,7 @@ AsyncStorage.setItem('data',JSON.stringify(this.state)).then((value)=> {
 
          pinjoin.sort((a,b) => a.min_age_limit > b.min_age_limit ? 1 : -1 )
          
-         console.log(pinjoin.length)
+         
 
 
       this.setState({
