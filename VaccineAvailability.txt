@@ -1,0 +1,14 @@
+Vaccine Availability
+
+A simple and much faster app to explore your vaccine availability slots.
+
+In this app we want to focus on 1 problem of vaccine slots availability , a simple and great app to manage all.
+No ads, Good UI/UX ,focus on User needs now a day. This app Saved your serach Location to view real time data of vaccine availability
+. All real time data come from cowin api . if user want to reset location , so just click on reset button . 
+
+
+This app is created by CreatorS.Inc .
+CreatorSsumit is developer who developed that app.
+
+Enjoy the app!
+       

@@ -43,6 +43,7 @@ const windowHeight = Dimensions.get('window').height;
   constructor(props){
   super(props);
   this.state={
+    
     alert:1,
     noti:3,
     states:[],
@@ -83,13 +84,13 @@ checkuser =() =>{
           var data1 = {...data,notify:true}
         
          this.setState({...data1})
-         
+          this.fetchdata()
 
       }else{
        this.setState({vaccineAvailablity:false})
       }
     
-    }catch(error){console.log(error)}
+    }catch(error){}
     
      
   }else{
@@ -113,16 +114,16 @@ checkuser =() =>{
 
    if(nextappstate === 'background'){
      console.log("app in background")
-     this.fetchdata()
+     
 }
    if(nextappstate === 'active'){
     console.log("app in active")
-    this.fetchdata()
+
     
     
    }
    if(nextappstate === 'inactive'){
-    console.log("app in active")
+    console.log("app in inactive")
 
    }
  }
@@ -173,7 +174,6 @@ date = date.replace(/\//g, "-");
 
 
 this.checkuser()
-
 AppState.addEventListener('change',this.handleappstate)
 
 
@@ -270,7 +270,7 @@ await instance.get(`https://cdn-api.co-vin.in/api/v2/appointment/sessions/public
          
 AsyncStorage.setItem('data',JSON.stringify(this.state)).then((value)=> {
 
-        }).catch(error => console.log(error))
+        }).catch(err => console.log(err))
 
 
 
@@ -357,7 +357,7 @@ AsyncStorage.setItem('data',JSON.stringify(this.state)).then((value)=> {
   
    //  
   })
-  }}catch(error){console.log()}
+  }}catch(error){}
 
   
   if(this.state.pincode.length < 6 && this.state.pincode > 0 && this.state.pinmode){
@@ -370,122 +370,127 @@ AsyncStorage.setItem('data',JSON.stringify(this.state)).then((value)=> {
     }
   }
   
+try{
 
-
-  instance.get(`https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/findByPin?pincode=${this.state.pincode}&date=${date}-${month}-${year}`).then(e=> e.data).then(resw =>{
+   
+ await instance.get(`https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/findByPin?pincode=${this.state.pincode}&date=${date}-${month}-${year}`).then(e=> e.data).then(resw =>{
    
          
-  var avpin = resw.sessions.filter(es => es.available_capacity > 0)
+    var avpin = resw.sessions.filter(es => es.available_capacity > 0)
+     
+    instance.get(`https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/findByPin?pincode=${this.state.pincode}&date=${tommdate}-${month}-${year}`).then(e=> e.data).then(resss =>{
+  
+  
+  
+  
+   var avpin2 = resss.sessions.filter(es => es.available_capacity > 0)
+  
+  
+  
+     
+  
+      if(avpin && avpin2){
+  
+  
+        pinjoin = [...avpin,...avpin2]
+    
+  
+  
+          pinjoin.sort((a,b) => a.min_age_limit > b.min_age_limit ? 1 : -1 )
+           
+          this.setState({
+          avail:pinjoin,
+          vaccineAvailablity:true,
+          notify:true
+        }) 
+  
+  
+        AsyncStorage.setItem('data',JSON.stringify(this.state)).then((value)=> {
+  
+        }).catch(error => console.log(error))
+  
+        if(this.state.alert == 1){
+          alert('Thank you Notified me ,we will show you real time vaccine availabilty at your given location ,if you want to go cowin site for BOOK APPOINTMENT so just click on any of available list,else want to go homepage so tap on reset button will show at top')
+          
+          this.setState({
+            alert:this.state.alert +1
+          })
+    }
+  
+    console.log(pinjoin.length)
+  
+    setTimeout(() => this.fetchdata(),4000);
+  
+  
+  
+  
+      }else if(avpin || avpin2 === 0){
+        this.setState({
+          vaccineAvailablity:false
+        })
+      }
+  
+      if(this.state.avail){
+          
+        if(this.state.avail.length < 1){
+         
+         channeliddate('1')
+        shownotification("1" , "✔✔💉No Vaccine Available Now", " No Vaccine available at your saved location . Open app to view available slots")
+  
+         Alert.alert('Want to stay here ?','No Vaccine Available Now ,we will notify you soon when it available, if you  click on yes then we will alert you at your search history basis,if you click on go back then we move on previos page and search new location',[{text:'Go Back',onPress: ()=>{ this.resetchange() },style:'cancel'},{text:'Yes',onPress:()=>  {}}])
+  
+       }else{
+  
+         if(this.state.noti < 4){
+           channeliddate('1')
+           shownotification("1" , "✔✔💉 Vaccine Available Now", "Vaccine available at your saved location . Open app to view available slots")
+           this.setState({noti:this.state.noti + 1})
+         }
+         
+         
+       }
+       }
+  
+  
+  
+  
+  
+       if(this.state.alert < 2){
+         this.setState({alert:this.state.alert + 1})
+  
+        
+  
+       }
+  
+       if(this.state.avail = null && this.state.avail.length < 1 && this.state.pincode.length > 0){
+         alert('No Vaccine Available Now ,we will notify you soon when it available')
+         this.setState({
+           vaccineAvailablity:false
+         })
+         
+         channeliddate('1')
+        shownotification("1" , "✔✔💉 No Vaccine Available Now", " No Vaccine available at your saved location . Open app to view available slots")
+  
+       }
+  
+       
+       }).catch(e=> {
+  
+        var id = window.setTimeout(function(){},0);
+        console.log(id)
+            while (id--){
+              window.clearTimeout(id);
+            }
+  
+       })
    
-  instance.get(`https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/findByPin?pincode=${this.state.pincode}&date=${tommdate}-${month}-${year}`).then(e=> e.data).then(resss =>{
-
-
-
-
- var avpin2 = resss.sessions.filter(es => es.available_capacity > 0)
-
-
-
+    //  
    
-
-    if(avpin && avpin2){
-
-
-      pinjoin = [...avpin,...avpin2]
+   })
   
 
 
-        pinjoin.sort((a,b) => a.min_age_limit > b.min_age_limit ? 1 : -1 )
-         
-        this.setState({
-        avail:pinjoin,
-        vaccineAvailablity:true,
-        notify:true
-      }) 
-
-
-      AsyncStorage.setItem('data',JSON.stringify(this.state)).then((value)=> {
-
-      }).catch(error => console.log(error))
-
-      if(this.state.alert == 1){
-        alert('Thank you Notified me ,we will show you real time vaccine availabilty at your given location ,if you want to go cowin site for BOOK APPOINTMENT so just click on any of available list,else want to go homepage so tap on reset button will show at top')
-        
-        this.setState({
-          alert:this.state.alert +1
-        })
-  }
-
-  console.log(pinjoin.length)
-
-  setTimeout(() => this.fetchdata(),4000);
-
-
-
-
-    }else if(avpin || avpin2 === 0){
-      this.setState({
-        vaccineAvailablity:false
-      })
-    }
-
-    if(this.state.avail){
-        
-      if(this.state.avail.length < 1){
-       
-       channeliddate('1')
-      shownotification("1" , "✔✔💉No Vaccine Available Now", " No Vaccine available at your saved location . Open app to view available slots")
-
-       Alert.alert('Want to stay here ?','No Vaccine Available Now ,we will notify you soon when it available, if you  click on yes then we will alert you at your search history basis,if you click on go back then we move on previos page and search new location',[{text:'Go Back',onPress: ()=>{ this.resetchange() },style:'cancel'},{text:'Yes',onPress:()=>  {}}])
-
-     }else{
-
-       if(this.state.noti < 4){
-         channeliddate('1')
-         shownotification("1" , "✔✔💉 Vaccine Available Now", "Vaccine available at your saved location . Open app to view available slots")
-         this.setState({noti:this.state.noti + 1})
-       }
-       
-       
-     }
-     }
-
-
-
-
-
-     if(this.state.alert < 2){
-       this.setState({alert:this.state.alert + 1})
-
-      
-
-     }
-
-     if(this.state.avail = null && this.state.avail.length < 1 && this.state.pincode.length > 0){
-       alert('No Vaccine Available Now ,we will notify you soon when it available')
-       this.setState({
-         vaccineAvailablity:false
-       })
-       
-       channeliddate('1')
-      shownotification("1" , "✔✔💉 No Vaccine Available Now", " No Vaccine available at your saved location . Open app to view available slots")
-
-     }
-
-     
-     }).catch(e=> {
-
-      var id = window.setTimeout(function(){},0);
-      console.log(id)
-          while (id--){
-            window.clearTimeout(id);
-          }
-
-     })
- 
-  //  
- 
- }).catch(err => console.log(err))
+}catch(err){}
 
 
 
@@ -569,7 +574,7 @@ changedatadistrict = value => {
     </View>
     <View style={{flexDirection:'row'}}>
     <FontAwesome name='rupee' style={{padding:10,paddingBottom:6,paddingLeft:6}} size={15} color='black' />
-      <Text style={{fontSize:13,fontWeight:'bold',flexWrap:'wrap' ,width:'87%',paddingTop:7}}>{item.fee_type ==='Free'||'free' ? "Free" : item.fee}</Text>
+      <Text style={{fontSize:13,fontWeight:'bold',flexWrap:'wrap' ,width:'87%',paddingTop:7}}>{item.fee_type}</Text>
     </View>
     <View style={{flexDirection:'row',position:'relative'}}>
     <Fontisto name='injection-syringe' style={{paddingLeft:4,paddingTop:8}} size={15} color='black' />
